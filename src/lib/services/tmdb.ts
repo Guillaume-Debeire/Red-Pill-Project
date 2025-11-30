@@ -1,5 +1,5 @@
 import { PUBLIC_TMDB_KEY } from '$env/static/public';
-import type { FilmDetails } from '$lib/types/film';
+import type { FilmDetails } from '$lib/types/Film.type';
 
 const TMDB_API = 'https://api.themoviedb.org/3';
 

@@ -1,0 +1,77 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Film {
+  localId            Int                 @id @default(autoincrement())
+  tmdbId             Int                 @unique
+  adult              Boolean
+  backdropPath       String?
+  filmCollectionId       Int?
+  filmCollection         FilmCollection?         @relation(fields: [filmCollectionId], references: [id])
+  dateWatched        DateTime
+  budget             Int
+  homepage           String?
+  imdbId             String?
+  originCountry      String[]
+  originalLanguage   String
+  originalTitle      String
+  overview           String?
+  popularity         Float
+  posterPath         String?
+  releaseDate        DateTime
+  revenue            Int
+  runtime            Int?
+  status             String
+  tagline            String?
+  title              String
+  video              Boolean
+  voteAverage        Float
+  voteCount          Int
+
+  genres             Genre[]             @relation("FilmGenres")
+  productionCompanies ProductionCompany[] @relation("FilmCompanies")
+  
+  productionCountries ProductionCountry[] @relation("FilmProductionCountry")
+  spokenLanguages SpokenLanguage[] @relation("FilmSpokenLanguage")
+}
+
+model Genre {
+  id    Int    @id @default(autoincrement())
+  name  String @unique
+  films Film[] @relation("FilmGenres")
+}
+
+model ProductionCountry {
+  iso31661      String@id
+  name          String
+  films         Film[] @relation("FilmProductionCountry")
+}
+
+model SpokenLanguage {
+  iso6391       String @id
+  name          String
+  englishName   String
+  films         Film[] @relation("FilmSpokenLanguage")
+}
+
+
+model ProductionCompany {
+  id            Int    @id @default(autoincrement())
+  name          String
+  logoPath      String?
+  originCountry String
+  films         Film[] @relation("FilmCompanies")
+}
+
+model FilmCollection {
+  id           Int    @id @default(autoincrement())
+  name         String
+  posterPath   String?
+  backdropPath String?
+  films        Film[]
+}

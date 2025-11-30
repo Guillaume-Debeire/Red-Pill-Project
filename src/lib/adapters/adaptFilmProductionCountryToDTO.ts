@@ -1,0 +1,5 @@
+import type { ProductionCountry, ProductionCountryDTO } from '$lib/types/ProductionCountry.type';
+
+export function adaptFilmProductionCountryToDTO(country: ProductionCountry): ProductionCountryDTO {
+	return { ...country, iso31661: country.iso_3166_1 };
+}
