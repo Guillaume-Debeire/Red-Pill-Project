@@ -1,0 +1,1 @@
+<p>Je suis la page du dashboard</p>
