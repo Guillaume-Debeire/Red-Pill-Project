@@ -37,6 +37,7 @@ model Film {
   releaseDate         DateTime
   revenue             Int
   runtime             Int?
+  releaseStatus       String
   tagline             String?
   title               String
   video               Boolean
@@ -56,7 +57,7 @@ model UserFilm {
   id          Int      @id @default(autoincrement())
   userId      Int
   filmId      Int
-  status      String   // "vu" | "a-voir"
+  userStatus      String   // "vu" | "a-voir"
   dateWatched DateTime?
   rating      Int?     // 1 à 10
   createdAt DateTime  @default(now())

@@ -55,7 +55,7 @@ async function handleAddFilm() {
   try {
     const userFilmInput: FilmUserCreateInput = {
       filmId: film.id,
-      status: 'vu',        // ou 'to-watch' selon ton UI
+      userStatus: 'vu',        // ou 'to-watch' selon ton UI
     };
 
     await addFilmToUserList(userFilmInput);

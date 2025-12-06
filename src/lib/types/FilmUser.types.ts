@@ -6,7 +6,7 @@ export type FilmUser = {
 	userId: number; // id de l'utilisateur
 	filmId: number; // id du film
 	film: FilmLocal; // le film complet
-	status: FilmUserStatus; // état du film pour cet utilisateur
+	userStatus: FilmUserStatus; // état du film pour cet utilisateur
 	dateWatched?: Date; // date de visionnage, optionnelle si 'a voir'
 	rating?: number; // note de 1 à 10
 	createdAt: Date; // date de création dans la table UserFilm
@@ -15,7 +15,7 @@ export type FilmUser = {
 
 export type FilmUserCreateInput = {
 	filmId: number;
-	status: FilmUserStatus;
+	userStatus: FilmUserStatus;
 	dateWatched?: string; // ISO date string
 	rating?: number; // 1 à 10
 };

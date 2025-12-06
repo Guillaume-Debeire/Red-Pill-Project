@@ -9,9 +9,11 @@
 
 <svelte:head>
 	<link rel="icon" href={favicon} /> 
-	<Navbar user={data.user} />
+
+</svelte:head>
+
+<Navbar user={data.user} />
 
 <Menu user={data.user} />
-</svelte:head>
 
 {@render children()}

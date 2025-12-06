@@ -22,7 +22,7 @@ export interface FilmBaseDTO {
 	revenue: number;
 	runtime: number | null;
 	spokenLanguages: SpokenLanguageDTO[];
-	status: string;
+	releaseStatus: string;
 	tagline: string | null;
 	title: string;
 	video: boolean;

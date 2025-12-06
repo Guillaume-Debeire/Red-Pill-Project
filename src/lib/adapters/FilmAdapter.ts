@@ -21,7 +21,7 @@ export function adaptFilmDetailsToDTO(film: FilmDetails): FilmDetailsDTO {
 		releaseDate: new Date(film.release_date),
 		revenue: film.revenue,
 		runtime: film.runtime,
-		status: film.status,
+		releaseStatus: film.status,
 		tagline: film.tagline,
 		title: film.title,
 		video: film.video,

@@ -32,7 +32,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 			data: {
 				userId: user.id,
 				filmId: prismaFilm.id,
-				status: userInfo.status,
+				userStatus: userInfo.status,
 				dateWatched: userInfo.dateWatched ? new Date(userInfo.dateWatched) : undefined,
 				rating: userInfo.rating
 			},
