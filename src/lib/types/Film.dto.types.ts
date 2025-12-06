@@ -36,5 +36,4 @@ export interface FilmDetailsDTO extends FilmBaseDTO {
 
 export interface FilmLocal extends FilmDetailsDTO {
 	localid: number;
-	dateWatched: Date;
 }

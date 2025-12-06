@@ -7,4 +7,9 @@
   }
 </script>
 
-<AutocompleteTMDB on:select={handleFilmSelect} />
+<div class="min-h-screen flex flex-col items-center justify-center bg-neutral-900 text-white px-4">
+  <div class="w-1/2">
+
+    <AutocompleteTMDB on:select={handleFilmSelect} />
+  </div>
+</div>

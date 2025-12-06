@@ -1,4 +1,5 @@
 import { env } from '$env/dynamic/private';
+import { redirect } from '@sveltejs/kit';
 import jwt from 'jsonwebtoken';
 
 export async function handle({ event, resolve }) {
@@ -13,6 +14,10 @@ export async function handle({ event, resolve }) {
 		}
 	} else {
 		event.locals.user = undefined;
+	}
+
+	if (event.locals.user && event.url.pathname === '/') {
+		throw redirect(302, '/films');
 	}
 
 	return resolve(event);

@@ -1,9 +1,11 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { page } from '$app/stores';
-  import type { FilmDetails } from '$lib/types/Film.type';
+  import type { FilmDetails } from '$lib/types/Film.types';
   import { getFilmByTmdbId } from '$lib/services/tmdb';
 	import FilmTitle from '$lib/components/layout/film-details/FilmTitle.svelte';
+	import { userFilmCreateSchema, type UserFilmCreateInputZod } from '$lib/schemas/userFilm.schema';
+	import type { FilmUserCreateInput } from '$lib/types/FilmUser.types';
 
   let film: FilmDetails | null = null;
   let loading = true;
@@ -28,29 +30,44 @@
     }
   });
 
-  async function addFilm (film: FilmDetails) {
+async function addFilmToUserList(input: UserFilmCreateInputZod) {
+  const parsed = userFilmCreateSchema.safeParse(input);
 
-      await fetch('/api/films', {
-        method: 'POST',
-        body: JSON.stringify(film),
-        headers: { 'Content-Type': 'application/json' }
-      }).catch((err) => console.error(err));
-    
+  if (!parsed.success) throw new Error('Invalid data');
+
+  const res = await fetch('/api/user-films', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      userInfo: parsed.data,
+      filmData: film,
+    }),
+  });
+
+  if (!res.ok) throw new Error('Erreur serveur');
+
+  return res.json();
+}
+async function handleAddFilm() {
+  if (!film) return;
+  saving = true;
+
+  try {
+    const userFilmInput: FilmUserCreateInput = {
+      filmId: film.id,
+      status: 'vu',        // ou 'to-watch' selon ton UI
+    };
+
+    await addFilmToUserList(userFilmInput);
+    saved = true;
+  } catch (err) {
+    console.error('Erreur ajout film:', err);      
+    saved = false;
+  } finally {
+    saving = false;
   }
-  
-  async function handleAddFilm() {
-    if (!film) return;
-    saving = true;
-    try {
-      await addFilm(film);
-      saved = true;
-    } catch (err) {
-      console.error('Erreur ajout film:', err);      
-      saved = false;
-    } finally {
-      saving = false;
-    }
-  }
+}
+
 </script>
 
 {#if loading}

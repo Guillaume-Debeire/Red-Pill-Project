@@ -15,8 +15,10 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
 
 		const { email, password, username } = parsed.data;
 
-		const existing = await prisma.user.findUnique({ where: { email } });
-		if (existing) return json({ error: 'Email déjà utilisé.' }, { status: 400 });
+		const existingEmail = await prisma.user.findUnique({ where: { email } });
+
+		const existingUsername = await prisma.user.findUnique({ where: { username } });
+		if (existingEmail) return json({ error: 'Email déjà utilisé.' }, { status: 400 });
 
 		const hashed = await bcrypt.hash(password, 10);
 

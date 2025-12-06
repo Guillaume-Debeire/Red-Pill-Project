@@ -15,45 +15,58 @@ model User {
   updatedAt DateTime  @updatedAt
 
   // Relation
-  films     Film[]
+  films     UserFilm[]
 }
 
 model Film {
-  localId            Int                 @id @default(autoincrement())
-  tmdbId             Int                 @unique
-  adult              Boolean
-  backdropPath       String?
-  filmCollectionId       Int?
-  filmCollection         FilmCollection?         @relation(fields: [filmCollectionId], references: [id])
-  dateWatched        DateTime
-  budget             Int
-  homepage           String?
-  imdbId             String?
-  originCountry      String[]
-  originalLanguage   String
-  originalTitle      String
-  overview           String?
-  popularity         Float
-  posterPath         String?
-  releaseDate        DateTime
-  revenue            Int
-  runtime            Int?
-  status             String
-  tagline            String?
-  title              String
-  video              Boolean
-  voteAverage        Float
-  voteCount          Int
+  id                  Int                 @id @default(autoincrement())
+  tmdbId              Int                 @unique
+  adult               Boolean
+  backdropPath        String?
+  filmCollectionId    Int?
+  filmCollection      FilmCollection?     @relation(fields: [filmCollectionId], references: [id])
+  budget              Int
+  homepage            String?
+  imdbId              String?
+  originCountry       String[]
+  originalLanguage    String
+  originalTitle       String
+  overview            String?
+  popularity          Float
+  posterPath          String?
+  releaseDate         DateTime
+  revenue             Int
+  runtime             Int?
+  tagline             String?
+  title               String
+  video               Boolean
+  voteAverage         Float
+  voteCount           Int
 
-  userId             Int
-  user               User                @relation(fields: [userId], references: [id])
-
-  genres             Genre[]             @relation("FilmGenres")
+  genres              Genre[]             @relation("FilmGenres")
   productionCompanies ProductionCompany[] @relation("FilmCompanies")
-  
-  productionCountries ProductionCountry[] @relation("FilmProductionCountry")
-  spokenLanguages SpokenLanguage[] @relation("FilmSpokenLanguage")
+  productionCountries ProductionCountry[]  @relation("FilmProductionCountry")
+  spokenLanguages     SpokenLanguage[]     @relation("FilmSpokenLanguage")
+
+  // Relation vers table intermédiaire
+  users               UserFilm[]
 }
+
+model UserFilm {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  filmId      Int
+  status      String   // "vu" | "a-voir"
+  dateWatched DateTime?
+  rating      Int?     // 1 à 10
+  createdAt DateTime  @default(now())
+
+  user        User     @relation(fields: [userId], references: [id])
+  film        Film     @relation(fields: [filmId], references: [id])
+
+  @@unique([userId, filmId]) // un utilisateur ne peut pas avoir deux fois le même film
+}
+
 
 model Genre {
   id    Int    @id @default(autoincrement())
