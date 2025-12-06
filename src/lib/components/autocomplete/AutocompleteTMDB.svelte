@@ -2,7 +2,7 @@
     import { goto } from '$app/navigation';
   import { createEventDispatcher } from 'svelte';
   import { searchTMDB } from '$lib/services/tmdb';
-	import type { Film } from '$lib/types/Film.type';
+	import type { FilmDetails } from '$lib/types/Film.types';
 
   const dispatch = createEventDispatcher();
 
@@ -13,13 +13,13 @@
   let debounceTimer: NodeJS.Timeout;
 
   // Déclenché quand on clique sur un film
-  function selectFilm(film: Film) {
+  function selectFilm(film: FilmDetails) {
     query = film.title;
     open = false;
     dispatch('select', film);
   }
 
-  function gotoFilm(film: Film) {
+  function gotoFilm(film: FilmDetails) {
     goto(`/film/${film.id}`);
   }
 

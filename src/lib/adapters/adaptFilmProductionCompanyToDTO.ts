@@ -1,4 +1,4 @@
-import type { ProductionCompany, ProductionCompanyDTO } from '$lib/types/ProductionCompany.type';
+import type { ProductionCompany, ProductionCompanyDTO } from '$lib/types/ProductionCompany.types';
 
 export function adaptFilmProductionCompanyToDTO(
 	prodcutionCompany: ProductionCompany

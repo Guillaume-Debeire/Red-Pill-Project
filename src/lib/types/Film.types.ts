@@ -1,8 +1,8 @@
-import type { FilmCollection } from './FilmCollection.type';
-import type { Genre } from './Genre.type';
-import type { ProductionCompany } from './ProductionCompany.type';
-import type { ProductionCountry } from './ProductionCountry.type';
-import type { SpokenLanguage } from './SpokenLanguage.type';
+import type { FilmCollection } from './FilmCollection.types';
+import type { Genre } from './Genre.types';
+import type { ProductionCompany } from './ProductionCompany.types';
+import type { ProductionCountry } from './ProductionCountry.types';
+import type { SpokenLanguage } from './SpokenLanguage.types';
 
 export interface FilmBase {
 	adult: boolean;

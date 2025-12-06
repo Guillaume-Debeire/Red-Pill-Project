@@ -1,7 +1,7 @@
-import type { Genre } from './Genre.type';
-import type { ProductionCompanyDTO } from './ProductionCompany.type';
-import type { ProductionCountryDTO } from './ProductionCountry.type';
-import type { SpokenLanguageDTO } from './SpokenLanguage.type';
+import type { Genre } from './Genre.types';
+import type { ProductionCompanyDTO } from './ProductionCompany.types';
+import type { ProductionCountryDTO } from './ProductionCountry.types';
+import type { SpokenLanguageDTO } from './SpokenLanguage.types';
 
 export interface FilmBaseDTO {
 	adult: boolean;

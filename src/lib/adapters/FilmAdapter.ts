@@ -1,5 +1,5 @@
 import type { FilmDetailsDTO } from '$lib/types/Film.dto.types';
-import type { FilmDetails } from '$lib/types/Film.type';
+import type { FilmDetails } from '$lib/types/Film.types';
 import { adaptFilmProductionCompanyToDTO } from './adaptFilmProductionCompanyToDTO';
 import { adaptFilmProductionCountryToDTO } from './adaptFilmProductionCountryToDTO';
 import { adaptSpokenLanguagesToDTO } from './adaptSpokenLanguagesToDTO';

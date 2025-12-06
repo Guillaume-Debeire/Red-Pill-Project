@@ -1,8 +1,10 @@
 import { json } from '@sveltejs/kit';
 import { addFilm } from '$lib/server/filmRepository.server';
 
-export async function POST({ request }) {
-	console.log('ye');
+export async function POST({ request, locals }) {
+	if (!locals.user) {
+		return json({ error: 'Unauthorized' }, { status: 401 });
+	}
 	try {
 		const film = await request.json();
 		const created = await addFilm(film);
@@ -12,9 +14,4 @@ export async function POST({ request }) {
 		console.error('Erreur API add film :', error);
 		return json({ error: 'Erreur interne' }, { status: 500 });
 	}
-}
-
-export function GET() {
-	console.log('api connected');
-	return json({ message: 'ok' });
 }

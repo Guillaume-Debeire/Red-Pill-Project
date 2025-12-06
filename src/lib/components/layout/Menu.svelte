@@ -1,14 +1,17 @@
-<script>
-  import { page } from '$app/state';
+<script lang="ts">
+	import type { UserSession } from "$lib/types/User.types";
+
+  export let user: UserSession;
 
   const links = [
     { href: '/films', label: 'Films' },
     { href: '/search', label: 'Ajouter' },
-    { href: '/dashboard', label: 'Stats' },
+    { href: '/dashboard', label: 'Stats' }
   ];
 </script>
 
-  <nav class="rounded-full bg-gray-200 absolute bottom-0 left-[50%] -translatex-[50%] max-w-5xl mx-auto px-2 my-12 py-1.5 flex items-center justify-between">
+{#if user}
+  <nav class="rounded-full bg-gray-200 absolute bottom-0 left-[50%] -translate-x-[50%] max-w-5xl mx-auto px-2 my-12 py-1.5 flex items-center justify-between">
     <div class="flex items-center gap-6">
       {#each links as link}
         <a
@@ -20,3 +23,4 @@
       {/each}
     </div>
   </nav>
+{/if}

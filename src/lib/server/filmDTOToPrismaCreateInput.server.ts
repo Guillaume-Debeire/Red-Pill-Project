@@ -1,12 +1,11 @@
 import { adaptFilmDetailsToDTO } from '$lib/adapters/FilmAdapter';
 import type { FilmDetailsDTO } from '$lib/types/Film.dto.types';
-import type { FilmDetails } from '$lib/types/Film.type';
+import type { FilmDetails } from '$lib/types/Film.types';
 import type { Prisma } from '@prisma/client';
 
 export function filmDTOToPrismaCreateInput(
 	film: Omit<FilmDetails, 'localid'>
 ): Prisma.FilmCreateInput {
-	console.log('yo');
 	const formattedFilm = {
 		...adaptFilmDetailsToDTO(film),
 		// 🌟 Collection (1:N)

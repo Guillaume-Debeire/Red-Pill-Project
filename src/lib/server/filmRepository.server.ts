@@ -1,5 +1,5 @@
 import { prisma } from '$lib/server/prisma.server';
-import type { FilmDetails } from '$lib/types/Film.type';
+import type { FilmDetails } from '$lib/types/Film.types';
 import { filmDTOToPrismaCreateInput } from '$lib/server/filmDTOToPrismaCreateInput.server';
 
 // =========================

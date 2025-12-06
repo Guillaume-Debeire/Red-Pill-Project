@@ -9,7 +9,6 @@ let { data }: PageProps = $props();
 
 // })
 
-console.log('films', data)
 </script>
 
 <h1 class="text-2xl font-bold mb-4">Redpill — Mes films</h1>

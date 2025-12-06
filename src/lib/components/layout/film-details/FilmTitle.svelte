@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { FilmDetails } from '$lib/types/Film.type';
+  import type { FilmDetails } from '$lib/types/Film.types';
 
   export let film: FilmDetails;
 </script>

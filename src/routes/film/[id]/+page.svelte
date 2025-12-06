@@ -20,7 +20,6 @@
 
     try {
       film = await getFilmByTmdbId(id);
-      console.log('film', film);
     } catch (err) {
       console.error('Erreur récupération film TMDb:', err);
       film = null;

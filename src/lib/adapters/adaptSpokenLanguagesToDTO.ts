@@ -1,4 +1,4 @@
-import type { SpokenLanguage, SpokenLanguageDTO } from '$lib/types/SpokenLanguage.type';
+import type { SpokenLanguage, SpokenLanguageDTO } from '$lib/types/SpokenLanguage.types';
 
 export function adaptSpokenLanguagesToDTO(language: SpokenLanguage): SpokenLanguageDTO {
 	return {
