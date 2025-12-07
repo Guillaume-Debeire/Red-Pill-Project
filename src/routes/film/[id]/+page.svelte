@@ -4,10 +4,11 @@
   import type { FilmDetails } from '$lib/types/Film.types';
   import { getFilmByTmdbId } from '$lib/services/tmdb';
 	import FilmTitle from '$lib/components/layout/film-details/FilmTitle.svelte';
-	import { userFilmCreateSchema, type UserFilmCreateInputZod } from '$lib/schemas/userFilm.schema';
 	import type { FilmUserCreateInput } from '$lib/types/FilmUser.types';
+	import { addFilmToUserList } from '$lib/services/addFilmToUserList';
+	import type { FilmBaseDTO, FilmDetailsDTO } from '$lib/types/Film.dto.types';
 
-  let film: FilmDetails | null = null;
+  let film: FilmDetailsDTO | null = null;
   let loading = true;
   let saving = false;
   let saved = false;
@@ -30,35 +31,18 @@
     }
   });
 
-async function addFilmToUserList(input: UserFilmCreateInputZod) {
-  const parsed = userFilmCreateSchema.safeParse(input);
 
-  if (!parsed.success) throw new Error('Invalid data');
-
-  const res = await fetch('/api/user-films', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      userInfo: parsed.data,
-      filmData: film,
-    }),
-  });
-
-  if (!res.ok) throw new Error('Erreur serveur');
-
-  return res.json();
-}
 async function handleAddFilm() {
   if (!film) return;
   saving = true;
 
   try {
     const userFilmInput: FilmUserCreateInput = {
-      filmId: film.id,
+      filmId: film.tmdbId,
       userStatus: 'vu',        // ou 'to-watch' selon ton UI
     };
 
-    await addFilmToUserList(userFilmInput);
+    await addFilmToUserList({ input:userFilmInput, film });
     saved = true;
   } catch (err) {
     console.error('Erreur ajout film:', err);      

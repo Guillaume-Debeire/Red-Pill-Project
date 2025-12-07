@@ -1,4 +1,6 @@
 <script lang="ts">
+	import Menu from "../layout/Menu.svelte";
+
   export let user: { id: number; email: string; username: string } | undefined;
 </script>
 
@@ -8,6 +10,8 @@
   <div class="flex items-center gap-4">
 
     {#if user}
+      <Menu user={user} />
+
       <span class="opacity-80">Yo {user.username} 👊</span>
 
       <form method="POST" action="/logout">

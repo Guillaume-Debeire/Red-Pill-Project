@@ -61,8 +61,7 @@ export function filmDTOToPrismaCreateInput(
 					name: sl.name
 				}
 			}))
-		},
-		dateWatched: new Date()
+		}
 	};
 	return formattedFilm;
 }

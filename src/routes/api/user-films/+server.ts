@@ -28,11 +28,12 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 				...filmData
 			})
 		});
+		console.log('userInfo', userInfo);
 		const userFilm = await prisma.userFilm.create({
 			data: {
 				userId: user.id,
 				filmId: prismaFilm.id,
-				userStatus: userInfo.status,
+				userStatus: userInfo.userStatus,
 				dateWatched: userInfo.dateWatched ? new Date(userInfo.dateWatched) : undefined,
 				rating: userInfo.rating
 			},

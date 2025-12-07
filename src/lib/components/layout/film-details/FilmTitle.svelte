@@ -1,5 +1,6 @@
 <script lang="ts">
-  import type { FilmDetails } from '$lib/types/Film.types';
+	import type { FilmDetails } from "$lib/schemas/film.schema";
+
 
   export let film: FilmDetails;
 </script>

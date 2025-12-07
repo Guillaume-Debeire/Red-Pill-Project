@@ -11,7 +11,7 @@
 </script>
 
 {#if user}
-  <nav class="rounded-full bg-gray-200 absolute bottom-0 left-[50%] -translate-x-[50%] max-w-5xl mx-auto px-2 my-12 py-1.5 flex items-center justify-between">
+  <nav class="rounded-full bg-gray-200  max-w-5xl mx-auto px-2 py-1.5 flex items-center justify-between text-black">
     <div class="flex items-center gap-6">
       {#each links as link}
         <a
