@@ -2,6 +2,7 @@ import { json } from '@sveltejs/kit';
 import { addFilm } from '$lib/server/filmRepository.server';
 
 export async function POST({ request, locals }) {
+	console.log('on tente !!');
 	if (!locals.user) {
 		return json({ error: 'Unauthorized' }, { status: 401 });
 	}

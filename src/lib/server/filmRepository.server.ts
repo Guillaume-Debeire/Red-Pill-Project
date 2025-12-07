@@ -1,6 +1,7 @@
 import { prisma } from '$lib/server/prisma.server';
-import type { FilmDetails } from '$lib/types/Film.types';
-import { filmDTOToPrismaCreateInput } from '$lib/server/filmDTOToPrismaCreateInput.server';
+import { filmDTOToPrismaCreateInput } from '$lib/adapters/filmDTOToPrismaCreateInput';
+import type { FilmDetails } from '$lib/schemas/tmdb/filmTMDB.schema';
+import type { Film } from '@prisma/client';
 
 // =========================
 // CRUD
@@ -18,7 +19,7 @@ export async function addFilm(film: FilmDetails) {
 
 export async function getAllFilms() {
 	return await prisma.film.findMany({
-		orderBy: { dateWatched: 'desc' }
+		orderBy: { title: 'desc' }
 	});
 }
 

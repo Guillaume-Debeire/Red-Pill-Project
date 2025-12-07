@@ -1,4 +1,4 @@
-import type { FilmCollectionDTO } from './FilmCollection.types';
+import type { BelongsToCollectionDTO } from './FilmCollection.types';
 import type { Genre } from './Genre.types';
 import type { ProductionCompanyDTO } from './ProductionCompany.types';
 import type { ProductionCountryDTO } from './ProductionCountry.types';
@@ -7,7 +7,7 @@ import type { SpokenLanguageDTO } from './SpokenLanguage.types';
 export interface FilmBaseDTO {
 	adult: boolean;
 	backdropPath: string | null;
-	belongsToCollection: FilmCollectionDTO | null;
+	belongsToCollection: BelongsToCollectionDTO | null;
 	budget: number;
 	genres: Genre[];
 	homepage: string | null;

@@ -1,24 +1,23 @@
-import type { FilmDetailsDTO } from '$lib/types/Film.dto.types';
-import type { FilmDetails } from '$lib/types/Film.types';
-import { adaptFilmProductionCompanyToDTO } from './adaptFilmProductionCompanyToDTO';
-import { adaptFilmProductionCountryToDTO } from './adaptFilmProductionCountryToDTO';
-import { adaptSpokenLanguagesToDTO } from './adaptSpokenLanguagesToDTO';
+import type { FilmDetails } from '$lib/schemas/tmdb/filmTMDB.schema';
+import type { Prisma } from '@prisma/client';
 
-export function adaptFilmDetailsToDTO(film: FilmDetails): FilmDetailsDTO {
+export function adaptFilmDetailsToFilmCreateInput(
+	film: Omit<FilmDetails, 'localid'>
+): Prisma.FilmCreateInput {
 	return {
 		tmdbId: film.id,
-		adult: film.adult,
+		adult: film.adult === true,
 		backdropPath: film.backdrop_path,
 		budget: film.budget,
 		homepage: film.homepage,
 		imdbId: film.imdb_id,
-		originCountry: film.origin_country,
+		originCountry: film.origin_country ?? undefined,
 		originalLanguage: film.original_language,
 		originalTitle: film.original_title,
 		overview: film.overview,
 		popularity: film.popularity,
 		posterPath: film.poster_path,
-		releaseDate: new Date(film.release_date),
+		releaseDate: film.release_date ? new Date(film.release_date) : undefined,
 		revenue: film.revenue,
 		runtime: film.runtime,
 		releaseStatus: film.status,
@@ -26,14 +25,6 @@ export function adaptFilmDetailsToDTO(film: FilmDetails): FilmDetailsDTO {
 		title: film.title,
 		video: film.video,
 		voteAverage: film.vote_average,
-		voteCount: film.vote_count,
-		genres: film.genres,
-		productionCompanies: film.production_companies.map((production_company) =>
-			adaptFilmProductionCompanyToDTO(production_company)
-		),
-		productionCountries: film.production_countries.map((country) =>
-			adaptFilmProductionCountryToDTO(country)
-		),
-		spokenLanguages: film.spoken_languages.map((language) => adaptSpokenLanguagesToDTO(language))
+		voteCount: film.vote_count
 	};
 }

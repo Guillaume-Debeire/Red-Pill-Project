@@ -4,14 +4,14 @@ import { z } from 'zod';
 import type { RequestHandler } from './$types';
 import { prisma } from '$lib/server/prisma.server';
 import { userFilmCreateSchema } from '$lib/schemas/userFilm.schema';
-import { filmDTOToPrismaCreateInput } from '$lib/server/filmDTOToPrismaCreateInput.server';
+import { filmDTOToPrismaCreateInput } from '$lib/adapters/filmDTOToPrismaCreateInput';
 
 export const POST: RequestHandler = async ({ request, locals }) => {
 	const user = locals.user;
 	if (!user) return json({ error: 'Not authenticated' }, { status: 401 });
 
 	const body = await request.json();
-	console.log('body', body);
+
 	// Validation Zod
 	// const parsed = userFilmCreateSchema.safeParse(body);
 	// if (!parsed.success) {
@@ -19,6 +19,8 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 	// }
 
 	const { userInfo, filmData } = body;
+
+	console.log('userInfo', userInfo);
 
 	try {
 		const prismaFilm = await prisma.film.upsert({
@@ -32,7 +34,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 		const userFilm = await prisma.userFilm.create({
 			data: {
 				userId: user.id,
-				filmId: prismaFilm.id,
+				filmId: userInfo.filmId,
 				userStatus: userInfo.userStatus,
 				dateWatched: userInfo.dateWatched ? new Date(userInfo.dateWatched) : undefined,
 				rating: userInfo.rating

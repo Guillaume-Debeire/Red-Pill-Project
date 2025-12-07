@@ -1,15 +1,17 @@
-import { adaptFilmDetailsToDTO } from '$lib/adapters/FilmAdapter';
+import { adaptFilmDetailsToFilmCreateInput } from '$lib/adapters/FilmAdapter';
+import type { FilmDetails } from '$lib/schemas/tmdb/filmTMDB.schema';
 import type { FilmDetailsDTO } from '$lib/types/Film.dto.types';
-import type { FilmDetails } from '$lib/types/Film.types';
 import type { Prisma } from '@prisma/client';
 
 export function filmDTOToPrismaCreateInput(
 	film: Omit<FilmDetails, 'localid'>
 ): Prisma.FilmCreateInput {
+	console.log('film genre', film.genres);
+	console.log('type = ', typeof film.genres);
 	const formattedFilm = {
-		...adaptFilmDetailsToDTO(film),
+		...adaptFilmDetailsToFilmCreateInput(film),
 		// 🌟 Collection (1:N)
-		filmCollection: film.belongs_to_collection?.id
+		belongsToCollection: film.belongs_to_collection?.id
 			? {
 					connectOrCreate: {
 						where: { id: film.belongs_to_collection?.id },
@@ -24,16 +26,18 @@ export function filmDTOToPrismaCreateInput(
 			: undefined,
 
 		// 🌟 Genres (N:N)
-		genres: {
-			connectOrCreate: film.genres.map((g) => ({
-				where: { id: g.id },
-				create: { id: g.id, name: g.name }
-			}))
-		},
+		genres: film.genres
+			? {
+					connectOrCreate: film.genres.map((g) => ({
+						where: { id: g.id },
+						create: { id: g.id, name: g.name }
+					}))
+				}
+			: undefined,
 
 		// 🌟 Production Companies (N:N)
 		productionCompanies: {
-			connectOrCreate: film.production_companies.map((pc) => ({
+			connectOrCreate: film.production_companies?.map((pc) => ({
 				where: { id: pc.id },
 				create: {
 					id: pc.id,
@@ -44,7 +48,7 @@ export function filmDTOToPrismaCreateInput(
 			}))
 		},
 		productionCountries: {
-			connectOrCreate: film.production_countries.map((pc) => ({
+			connectOrCreate: film.production_countries?.map((pc) => ({
 				where: { iso31661: pc.iso_3166_1 },
 				create: {
 					iso31661: pc.iso_3166_1,
@@ -53,7 +57,7 @@ export function filmDTOToPrismaCreateInput(
 			}))
 		},
 		spokenLanguages: {
-			connectOrCreate: film.spoken_languages.map((sl) => ({
+			connectOrCreate: film.spoken_languages?.map((sl) => ({
 				where: { iso6391: sl.iso_639_1 },
 				create: {
 					englishName: sl.english_name,

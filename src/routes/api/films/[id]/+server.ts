@@ -7,6 +7,8 @@ export async function GET({ params, locals }) {
 	}
 	const id = Number(params.id);
 
+	console.log('id server', id);
+
 	const film = await getFilmById(id);
 
 	if (!film) {

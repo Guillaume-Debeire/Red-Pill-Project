@@ -11,3 +11,7 @@ export const spokenLanguageDTOSchema = z.object({
 	iso6391: z.string(),
 	name: z.string()
 });
+
+export type SpokenLanguage = z.infer<typeof spokenLanguageSchema>;
+
+export type SpokenLanguageDTO = z.infer<typeof spokenLanguageDTOSchema>;

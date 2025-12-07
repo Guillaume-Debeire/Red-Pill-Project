@@ -23,26 +23,26 @@ model Film {
   tmdbId              Int                 @unique
   adult               Boolean
   backdropPath        String?
-  filmCollectionId    Int?
-  filmCollection      FilmCollection?     @relation(fields: [filmCollectionId], references: [id])
-  budget              Int
+  belongsToCollectionId    Int?
+  belongsToCollection BelongsToCollection?     @relation(fields: [belongsToCollectionId], references: [id])
+  budget              Int?
   homepage            String?
   imdbId              String?
   originCountry       String[]
-  originalLanguage    String
-  originalTitle       String
+  originalLanguage    String?
+  originalTitle       String?
   overview            String?
-  popularity          Float
+  popularity          Float?
   posterPath          String?
-  releaseDate         DateTime
-  revenue             Int
+  releaseDate         DateTime?
+  revenue             Int?
   runtime             Int?
-  releaseStatus       String
+  releaseStatus       String?
   tagline             String?
   title               String
-  video               Boolean
-  voteAverage         Float
-  voteCount           Int
+  video               Boolean?
+  voteAverage         Float?
+  voteCount           Int?
 
   genres              Genre[]             @relation("FilmGenres")
   productionCompanies ProductionCompany[] @relation("FilmCompanies")
@@ -57,13 +57,13 @@ model UserFilm {
   id          Int      @id @default(autoincrement())
   userId      Int
   filmId      Int
-  userStatus      String   // "vu" | "a-voir"
+  userStatus  String   // "pas-vu" | "vu" | "a-voir"
   dateWatched DateTime?
   rating      Int?     // 1 à 10
   createdAt DateTime  @default(now())
 
   user        User     @relation(fields: [userId], references: [id])
-  film        Film     @relation(fields: [filmId], references: [id])
+  film        Film     @relation(fields: [filmId], references: [tmdbId])
 
   @@unique([userId, filmId]) // un utilisateur ne peut pas avoir deux fois le même film
 }
@@ -97,7 +97,7 @@ model ProductionCompany {
   films         Film[] @relation("FilmCompanies")
 }
 
-model FilmCollection {
+model BelongsToCollection {
   id           Int    @id @default(autoincrement())
   name         String
   posterPath   String?

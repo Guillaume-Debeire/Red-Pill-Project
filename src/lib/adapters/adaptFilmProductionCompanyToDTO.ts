@@ -1,8 +1,9 @@
-import type { ProductionCompany, ProductionCompanyDTO } from '$lib/types/ProductionCompany.types';
+import type { ProductionCompanyTMDB } from '$lib/schemas/tmdb/productionCompanyTMDB.schema';
+import type { ProductionCompany } from '@prisma/client';
 
 export function adaptFilmProductionCompanyToDTO(
-	prodcutionCompany: ProductionCompany
-): ProductionCompanyDTO {
+	prodcutionCompany: ProductionCompanyTMDB
+): ProductionCompany {
 	return {
 		...prodcutionCompany,
 		logoPath: prodcutionCompany.logo_path,

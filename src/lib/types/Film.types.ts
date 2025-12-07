@@ -1,4 +1,4 @@
-import type { FilmCollection } from './FilmCollection.types';
+import type { BelongsToCollection } from './FilmCollection.types';
 import type { Genre } from './Genre.types';
 import type { ProductionCompany } from './ProductionCompany.types';
 import type { ProductionCountry } from './ProductionCountry.types';
@@ -7,7 +7,7 @@ import type { SpokenLanguage } from './SpokenLanguage.types';
 export interface FilmBase {
 	adult: boolean;
 	backdrop_path: string | null;
-	belongs_to_collection: FilmCollection | null;
+	belongs_to_collection: BelongsToCollection | null;
 	budget: number;
 	genres: Genre[];
 	homepage: string | null;
