@@ -1,5 +1,4 @@
 import { prisma } from '$lib/server/prisma.server';
-import { redirect } from '@sveltejs/kit';
 
 export async function GET({ locals }) {
 	const user = locals.user;
@@ -7,7 +6,7 @@ export async function GET({ locals }) {
 		throw new Error('Accès non autorisé');
 	}
 
-	const items = await prisma.userFilm.findMany({
+	const items = await prisma.userFilmEntry.findMany({
 		where: { userId: user?.id },
 		include: { film: true }
 	});

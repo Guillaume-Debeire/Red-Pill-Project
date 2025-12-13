@@ -2,19 +2,17 @@
   import { onMount } from 'svelte';
   import { page } from '$app/stores';
 	import FilmTitle from '$lib/components/layout/film-details/FilmTitle.svelte';
-
-  import { addFilmToUserList } from '$lib/services/addFilmToUserList';
-	import type { FilmBaseDTO, FilmDetailsDTO } from '$lib/types/Film.dto.types';
-	import type { Film, Prisma, UserFilm } from '@prisma/client';
-	import type { UserFilmClient } from '$lib/types/FilmUser.types';
-	import { getOrCreateFilmByTmdbId, getUserFilmById } from '$lib/services/tmdb';
+	import type { Film, UserFilmEntry } from '@prisma/client';
+	import type { UserFilmEntryClient } from '$lib/types/FilmUser.types';
+	import { getOrCreateFilmByTmdbId } from '$lib/services/tmdb';
+	import { updateFilmStatus } from '$lib/api/userFilmEntry';
+	import { changeStatus } from '$lib/services/changeStatus';
+	import ButtonAddWatchlist from '$lib/components/ui/button-add-watchlist/ButtonAddWatchlist.svelte';
+	import ButtonAddWatchedList from '$lib/components/ui/button-add-watched-list/ButtonAddWatchedList.svelte';
   
-  let userFilm: UserFilm | null;
-  let userFilmClient: UserFilmClient;
-  let film: Film | null;
+  let userFilmEntryClient: UserFilmEntryClient | null;
   let loading = true;
   let saving = false;
-  let saved = false;
 
   onMount(async () => {
     const id = Number($page.params.id); // <- $page reactive
@@ -25,82 +23,114 @@
     }
 
     try {
-      userFilm = await getOrCreateFilmByTmdbId(id);
+      userFilmEntryClient = await getOrCreateFilmByTmdbId(id);
 
-      if (!userFilm) {
+      if (!userFilmEntryClient) {
         return;
       }
-      console.log('userFilm', userFilm)
-      if (!userFilm.filmId) {
+      if (!userFilmEntryClient.filmId) {
         throw new Error("filmId n'est pas bon")
       }
 
-      const res = await fetch(`/api/films/${userFilm.filmId}`);
-
-	if (!res.ok) {
-		throw new Error('Failed to fetch user films');
-	}
-
-	const data = await res.json();
-
-  console.log('data', data)
-  film = data;
-
-
     } catch (err) {
       console.error('Erreur récupération film TMDb:', err);
-      userFilm = null;
+      userFilmEntryClient = null;
     } finally {
       loading = false;
     }
   });
-
-
-async function handleAddFilm() {
-  if (!userFilm) return;
-  saving = true;
-
-  try {
-    // const userFilmInput: Prisma.UserFilmCreateInput = {
-    //   user: user,
-    //   userStatus: 'vu',     // ou 'to-watch' selon ton UI
-    // };
-
-    // console.log('userFilm', userFilmInput)
-
-    // await addFilmToUserList({ input:userFilmInput, filmUser });
-    saved = true;
-  } catch (err) {
-    console.error('Erreur ajout film:', err);      
-    saved = false;
-  } finally {
-    saving = false;
-  }
-}
-
 </script>
+  
 
-{#if loading}
-  <p>Chargement du film...</p>
-{:else if !userFilm || !film}
-  <p>Film non trouvé.</p>
-{:else}
-<div class="space-y-2">
-  <p>{userFilm.id}</p>
-  <FilmTitle film={film} />
-  <button 
-      class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50" 
-      on:click={handleAddFilm} 
-      disabled={saving || saved}>
-      {#if saving}Ajout en cours...{:else if saved}Film ajouté !{:else}Ajouter à mes films vus{/if}
-    </button>
-  <p><strong>Note :</strong> {film.voteAverage ?? 'N/A'} / 10</p>
-  <!-- <p><strong>Genres :</strong> {film.genres?.map(g => g.name).join(', ') ?? 'N/A'}</p> -->
-  <!-- <p><strong>Date de sortie :</strong> {film.releaseDate ?? 'N/A'}</p> -->
-  <p><strong>Durée :</strong> {film.runtime ?? 'N/A'} min</p>
-  <p><strong>Synopsis :</strong> {film.overview ?? 'Pas de synopsis'}</p>
-  {#if film.posterPath}
-    <img src={`https://image.tmdb.org/t/p/w300${film.posterPath}`} alt={film.title} class="mt-2 rounded" />
-  {/if}
-</div>
-{/if}
+<div class="bg-black text-zinc-200 overflow-hidden shadow-xl">
+  {#if loading}
+    <div class="flex items-center justify-center min-h-[300px] text-zinc-400">
+      Chargement du film…
+    </div>
+
+  {:else if !userFilmEntryClient}
+    <div class="flex items-center justify-center min-h-[300px] text-red-400">
+      Film non trouvé.
+    </div>
+  {:else}
+    <!-- HERO -->
+    <div class="relative">
+      {#if userFilmEntryClient.film.backdropPath}
+        <div
+          class="h-[260px] blur-xs bg-cover bg-center"
+          style="background-image: url('https://image.tmdb.org/t/p/w780{userFilmEntryClient.film.backdropPath}')"
+        />
+        <div class="absolute h-[105%] inset-0 bg-gradient-to-t from-black via-black/70 to-transparent" />
+      {/if}
+
+      <div class="absolute bottom-4 left-4 right-4 flex gap-6">
+        {#if userFilmEntryClient.film.posterPath}
+          <img
+            src={`https://image.tmdb.org/t/p/w300${userFilmEntryClient.film.posterPath}`}
+            alt={userFilmEntryClient.film.title}
+            class="w-32 rounded-lg shadow-lg"
+          />
+        {/if}
+
+        <div class="flex flex-col justify-end gap-2">
+          <FilmTitle film={userFilmEntryClient.film} />
+
+          <div class="flex items-center gap-4 text-sm text-zinc-400">
+            {#if userFilmEntryClient.film.releaseDate}
+              <span>{new Date(userFilmEntryClient.film.releaseDate).getFullYear()}</span>
+            {/if}
+            {#if userFilmEntryClient.film.runtime}
+              <span>{userFilmEntryClient.film.runtime} min</span>
+            {/if}
+            {#if userFilmEntryClient.film.voteAverage}
+              <span>⭐ {userFilmEntryClient.film.voteAverage.toFixed(1)} / 10</span>
+            {/if}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="p-6 space-y-6">
+
+      <!-- ACTION -->
+      <ButtonAddWatchedList userFilmEntryClient={userFilmEntryClient} saving={saving}/>
+
+      <ButtonAddWatchlist userFilmEntryClient={userFilmEntryClient} saving={saving} />
+
+      <!-- SYNOPSIS -->
+      <div class="space-y-2">
+        {userFilmEntryClient.film.releaseStatus}
+        <h3 class="text-lg font-semibold text-white">Synopsis</h3>
+        <p class="text-zinc-300 leading-relaxed">
+          {userFilmEntryClient.film.overview ?? 'Pas de synopsis disponible.'}
+        </p>
+      </div>
+
+      <!-- META -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 text-sm text-zinc-400">
+        {#if userFilmEntryClient.film.originalLanguage}
+          <div>
+            <span class="block text-zinc-500">Langue</span>
+            {userFilmEntryClient.film.originalLanguage.toUpperCase()}
+          </div>
+        {/if}
+
+        {#if userFilmEntryClient.film.releaseStatus}
+          <div>
+            <span class="block text-zinc-500">Statut</span>
+            {userFilmEntryClient.film.releaseStatus}
+          </div>
+        {/if}
+
+        {#if userFilmEntryClient.film.budget}
+          <div>
+            <span class="block text-zinc-500">Budget</span>
+            ${userFilmEntryClient.film.budget.toLocaleString()}
+          </div>
+        {/if}
+      </div>
+
+    </div>
+    {/if}
+  </div>

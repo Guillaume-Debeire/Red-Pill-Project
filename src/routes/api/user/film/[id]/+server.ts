@@ -1,20 +1,38 @@
 import { prisma } from '$lib/server/prisma.server';
-import { redirect } from '@sveltejs/kit';
+import type { UserFilmEntryClient } from '$lib/types/FilmUser.types';
 
 export async function GET({ params, locals }) {
 	const user = locals.user;
 	if (!user) {
-		throw new Error('Accès non autorisé');
+		return new Response('Accès non autorisé', { status: 401 });
 	}
 
-	const id = Number(params.id);
+	const filmId = Number(params.id);
+	if (Number.isNaN(filmId)) {
+		return new Response('ID invalide', { status: 400 });
+	}
 
-	const item = await prisma.userFilm.findUnique({
-		where: { userId_filmId: { filmId: id, userId: user.id } },
-		include: { film: true }
+	const userFilmEntry = await prisma.userFilmEntry.findUnique({
+		where: {
+			userId_filmId: {
+				userId: user.id,
+				filmId
+			}
+		},
+		include: {
+			film: true
+		}
 	});
 
-	return new Response(JSON.stringify(item), {
-		headers: { 'Content-Type': 'application/json' }
+	if (!userFilmEntry) {
+		return new Response('Film non trouvé', { status: 404 });
+	}
+
+	const userFilmEntryClient: UserFilmEntryClient = userFilmEntry;
+
+	return new Response(JSON.stringify(userFilmEntryClient), {
+		headers: {
+			'Content-Type': 'application/json'
+		}
 	});
 }

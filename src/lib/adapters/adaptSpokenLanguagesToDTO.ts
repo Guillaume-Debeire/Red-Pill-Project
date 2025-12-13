@@ -1,6 +1,8 @@
-import type { SpokenLanguage, SpokenLanguageDTO } from '$lib/schemas/spokenLanguage.schema';
+import type {} from '$lib/schemas/spokenLanguage.schema';
+import type { SpokenLanguageTMDB } from '$lib/schemas/tmdb/SpokenLanguageTMDB.schema';
+import type { SpokenLanguage } from '@prisma/client';
 
-export function adaptSpokenLanguagesToDTO(language: SpokenLanguage): SpokenLanguageDTO {
+export function adaptSpokenLanguagesToDTO(language: SpokenLanguageTMDB): SpokenLanguage {
 	return {
 		...language,
 		englishName: language.english_name,

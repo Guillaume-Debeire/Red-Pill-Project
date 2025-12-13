@@ -12,6 +12,6 @@ export const load: PageLoad = async ({ fetch }) => {
 	console.log('data', data);
 
 	return {
-		films: data // tableau de UserFilm + Film
+		userFilmEntryClients: data // tableau de userFilmEntry + Film
 	};
 };

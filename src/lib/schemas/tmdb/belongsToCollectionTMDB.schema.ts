@@ -7,13 +7,7 @@ export const belongsToCollectionTMDBSchema = z.object({
 	backdrop_path: z.string().nullable()
 });
 
-// export const belongsToCollectionDTOSchema = z.object({
-// 	id: z.number().optional(),
-// 	name: z.string(),
-// 	posterPath: z.string().nullable(),
-// 	backdropPath: z.string().nullable()
-// });
-
+/**
+ * Ce type sert uniquement à récupérer les données de l'API The Movie Database.
+ */
 export type BelongsToCollectionTMDB = z.infer<typeof belongsToCollectionTMDBSchema>;
-
-// export type BelongsToCollectionDTO = z.infer<typeof belongsToCollectionDTOSchema>;

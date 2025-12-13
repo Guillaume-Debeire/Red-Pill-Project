@@ -7,13 +7,7 @@ export const productionCompanyTMDBSchema = z.object({
 	origin_country: z.string()
 });
 
-// export const productionCompanyDTOSchema = z.object({
-// 	id: z.number(),
-// 	logoPath: z.string().nullable(),
-// 	name: z.string(),
-// 	originCountry: z.string()
-// });
-
+/**
+ * Ce type sert uniquement à récupérer les données de l'API The Movie Database.
+ */
 export type ProductionCompanyTMDB = z.infer<typeof productionCompanyTMDBSchema>;
-
-// export type ProductionCompanyDTOS = z.infer<typeof productionCompanyDTOSchema>;

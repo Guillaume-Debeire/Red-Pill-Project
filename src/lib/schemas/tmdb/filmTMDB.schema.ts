@@ -1,9 +1,9 @@
 import z from 'zod';
 import { genreSchema } from '../genre.schema';
-import { spokenLanguageSchema } from '../spokenLanguage.schema';
 import { belongsToCollectionTMDBSchema } from './belongsToCollectionTMDB.schema';
 import { productionCompanyTMDBSchema } from './productionCompanyTMDB.schema';
 import { productionCountryTMDBSchema } from './productionCountryTMDB.schema';
+import { spokenLanguageTMDBSchema } from './SpokenLanguageTMDB.schema';
 
 export const filmBaseSchema = z.object({
 	adult: z.boolean().nullable(),
@@ -24,7 +24,7 @@ export const filmBaseSchema = z.object({
 	release_date: z.string().nullable(), // YYYY-MM-DD
 	revenue: z.number().nullable(),
 	runtime: z.number().nullable(),
-	spoken_languages: z.array(spokenLanguageSchema).optional(),
+	spoken_languages: z.array(spokenLanguageTMDBSchema).optional(),
 	status: z.string().nullable(),
 	tagline: z.string().nullable(),
 	title: z.string(),
@@ -33,8 +33,14 @@ export const filmBaseSchema = z.object({
 	vote_count: z.number().nullable()
 });
 
+/**
+ * Ce Schema sert à la récupération de films de l'API TheMovieDatabase.
+ */
 export const filmDetailsSchema = filmBaseSchema.extend({
 	id: z.number()
 });
 
+/**
+ * Ce type sert à la récupération de films de l'API TheMovieDatabase.
+ */
 export type FilmDetails = z.infer<typeof filmDetailsSchema>;

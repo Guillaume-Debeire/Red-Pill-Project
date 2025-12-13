@@ -1,8 +1,8 @@
 import { PUBLIC_TMDB_KEY } from '$env/static/public';
 import { filmDetailsSchema } from '$lib/schemas/tmdb/filmTMDB.schema';
-import { filmDTOToPrismaCreateInput } from '$lib/adapters/filmDTOToPrismaCreateInput';
 import type { FilmBaseDTO, FilmDetailsDTO } from '$lib/types/Film.dto.types';
-import type { Film, UserFilm } from '@prisma/client';
+import type { UserFilmEntryClient } from '$lib/types/FilmUser.types';
+import type { Film, UserFilmEntry } from '@prisma/client';
 
 const TMDB_API = 'https://api.themoviedb.org/3';
 
@@ -19,13 +19,13 @@ export async function searchTMDB(query: string) {
 	return data.results || [];
 }
 
-export async function getUserFilmById(id: number): Promise<UserFilm | null> {
+export async function getUserFilmEntryByTMDBId(id: number): Promise<UserFilmEntryClient | null> {
 	try {
 		// 1️⃣ Essayer la base interne
 		const localRes = await fetch(`/api/user/film/${id}`);
 
 		if (localRes.ok) {
-			const localData = (await localRes.json()) as UserFilm;
+			const localData = (await localRes.json()) as UserFilmEntryClient;
 
 			console.log('localData', localData);
 
@@ -35,18 +35,14 @@ export async function getUserFilmById(id: number): Promise<UserFilm | null> {
 	} catch (e) {
 		throw new Error();
 	}
-	return null;
 }
 
-export async function getOrCreateFilmByTmdbId(id: number): Promise<UserFilm | null> {
+export async function getOrCreateFilmByTmdbId(id: number): Promise<UserFilmEntryClient | null> {
 	try {
-		console.log('id', id);
-		const userFilm = await getUserFilmById(id);
+		const userFilmEntry = await getUserFilmEntryByTMDBId(id);
 
-		console.log('user film ', userFilm);
-
-		if (userFilm) {
-			return userFilm;
+		if (userFilmEntry) {
+			return userFilmEntry;
 		}
 
 		// 2️⃣ Film pas en base → fetch TMDB
@@ -66,16 +62,15 @@ export async function getOrCreateFilmByTmdbId(id: number): Promise<UserFilm | nu
 		}
 
 		const validatedFilm = parsedTmdb.data;
-		// const dataToDB = filmDTOToPrismaCreateInput(validatedFilm);
 
 		// 3️⃣ Sauvegarder automatiquement le film en base
-		const res = await fetch('/api/user-films', {
+		const res = await fetch('/api/user-film-entry', {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({
 				userInfo: {
 					filmId: validatedFilm.id,
-					userStatus: 'pas-vu'
+					userStatus: 'PAS_VU'
 				},
 				filmData: validatedFilm
 			})
@@ -85,20 +80,13 @@ export async function getOrCreateFilmByTmdbId(id: number): Promise<UserFilm | nu
 			// On retourne quand même le film TMDB validé
 		}
 
-		// console.log('saveRes', await saveRes.json());
-
-		// const filmLocal = adaptFilmDetailsToDTO(validatedFilm);
-
 		const response = await res.json();
 
-		console.log('response ici', response);
-
-		const film = await getUserFilmById(response.filmId);
+		const film = await getUserFilmEntryByTMDBId(response.filmId);
 
 		return film;
 	} catch (err) {
-		console.error('Unexpected getFilmByTmdbId error:', err);
+		console.error('Unexpected getOrCreateFilmByTmdbId error:', err);
 		return null;
 	}
-	return null;
 }

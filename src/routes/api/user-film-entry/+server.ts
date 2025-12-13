@@ -3,7 +3,6 @@ import { json } from '@sveltejs/kit';
 import { z } from 'zod';
 import type { RequestHandler } from './$types';
 import { prisma } from '$lib/server/prisma.server';
-import { userFilmCreateSchema } from '$lib/schemas/userFilm.schema';
 import { filmDTOToPrismaCreateInput } from '$lib/adapters/filmDTOToPrismaCreateInput';
 
 export const POST: RequestHandler = async ({ request, locals }) => {
@@ -12,15 +11,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 
 	const body = await request.json();
 
-	// Validation Zod
-	// const parsed = userFilmCreateSchema.safeParse(body);
-	// if (!parsed.success) {
-	// 	return json({ error: 'Invalid data', details: parsed.error.format() }, { status: 400 });
-	// }
-
 	const { userInfo, filmData } = body;
-
-	console.log('userInfo', userInfo);
 
 	try {
 		const prismaFilm = await prisma.film.upsert({
@@ -30,8 +21,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 				...filmData
 			})
 		});
-		console.log('userInfo', userInfo);
-		const userFilm = await prisma.userFilm.create({
+		const userFilmEntry = await prisma.userFilmEntry.create({
 			data: {
 				userId: user.id,
 				filmId: userInfo.filmId,
@@ -44,7 +34,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 			}
 		});
 
-		return json(userFilm, { status: 201 });
+		return json(userFilmEntry, { status: 201 });
 	} catch (err: any) {
 		// Gestion de la contrainte unique userId+filmId
 		if (
@@ -54,7 +44,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 		) {
 			return json({ error: 'Film already exists for this user' }, { status: 409 });
 		}
-		console.error('Error creating userFilm:', err);
+		console.error('Error creating userFilmEntry:', err);
 		return json({ error: 'Server error' }, { status: 500 });
 	}
 };

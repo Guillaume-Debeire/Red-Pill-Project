@@ -15,7 +15,7 @@ model User {
   updatedAt DateTime  @updatedAt
 
   // Relation
-  films     UserFilm[]
+  films     UserFilmEntry[]
 }
 
 model Film {
@@ -50,14 +50,14 @@ model Film {
   spokenLanguages     SpokenLanguage[]     @relation("FilmSpokenLanguage")
 
   // Relation vers table intermédiaire
-  users               UserFilm[]
+  users               UserFilmEntry[]
 }
 
-model UserFilm {
+model UserFilmEntry {
   id          Int      @id @default(autoincrement())
   userId      Int
   filmId      Int
-  userStatus  String   // "pas-vu" | "vu" | "a-voir"
+  userStatus  FilmStatus   // "pas-vu" | "vu" | "a-voir"
   dateWatched DateTime?
   rating      Int?     // 1 à 10
   createdAt DateTime  @default(now())
@@ -66,6 +66,12 @@ model UserFilm {
   film        Film     @relation(fields: [filmId], references: [tmdbId])
 
   @@unique([userId, filmId]) // un utilisateur ne peut pas avoir deux fois le même film
+}
+
+enum FilmStatus {
+  A_VOIR
+  VU
+  PAS_VU
 }
 
 

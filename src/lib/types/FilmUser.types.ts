@@ -1,5 +1,5 @@
-import type { Film, UserFilm } from '@prisma/client';
+import type { Film, UserFilmEntry } from '@prisma/client';
 
-export interface UserFilmClient extends UserFilm {
-	film: Film | null; // le film complet
+export interface UserFilmEntryClient extends UserFilmEntry {
+	film: Film; // le film complet
 }

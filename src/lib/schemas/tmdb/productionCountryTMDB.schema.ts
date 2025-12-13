@@ -5,11 +5,7 @@ export const productionCountryTMDBSchema = z.object({
 	name: z.string()
 });
 
-// export const productionCountryDTOSchema = z.object({
-// 	iso31661: z.string(),
-// 	name: z.string()
-// });
-
+/**
+ * Ce type sert uniquement à récupérer les données de l'API The Movie Database.
+ */
 export type ProductionCountryTMDB = z.infer<typeof productionCountryTMDBSchema>;
-
-// export type ProductionCountryDTOS = z.infer<typeof productionCountryDTOSchema>;
