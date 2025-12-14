@@ -1,4 +1,6 @@
-export async function updateFilmStatus(filmId: number, status: 'A_VOIR' | 'VU' | 'PAS_VU') {
+import type { UserFilmEntry } from '@prisma/client';
+
+export async function updateFilmStatus(filmId: number, status: UserFilmEntry['entryStatus']) {
 	const res = await fetch(`/api/user-film-entry/${filmId}/status`, {
 		method: 'PATCH',
 		headers: {

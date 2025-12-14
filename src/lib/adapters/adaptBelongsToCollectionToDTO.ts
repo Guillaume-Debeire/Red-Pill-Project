@@ -7,6 +7,7 @@ export function adaptBelongsToCollectionToDTO(
 ): BelongsToCollection {
 	return {
 		...belongsToCollection,
+		tmdbId: belongsToCollection.id,
 		backdropPath: belongsToCollection.backdrop_path,
 		posterPath: belongsToCollection.poster_path
 	};

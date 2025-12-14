@@ -13,7 +13,7 @@ export async function changeStatus({ userFilmEntryClient, status, saving }: Para
 	saving = true;
 	try {
 		const updated = await updateFilmStatus(userFilmEntryClient.filmId, status);
-		userFilmEntryClient.userStatus = updated.userStatus;
+		userFilmEntryClient.entryStatus = updated.entryStatus;
 	} finally {
 		saving = false;
 	}

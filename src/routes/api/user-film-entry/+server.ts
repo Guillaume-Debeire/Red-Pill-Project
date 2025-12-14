@@ -1,49 +1,53 @@
 // src/routes/api/user-films/+server.ts
 import { json } from '@sveltejs/kit';
-import { z } from 'zod';
 import type { RequestHandler } from './$types';
 import { prisma } from '$lib/server/prisma.server';
-import { filmDTOToPrismaCreateInput } from '$lib/adapters/filmDTOToPrismaCreateInput';
+import { getOrCreateFilmByTmdbId } from '$lib/server/getOrCreateFilmByTmdbId.server';
 
 export const POST: RequestHandler = async ({ request, locals }) => {
 	const user = locals.user;
 	if (!user) return json({ error: 'Not authenticated' }, { status: 401 });
 
 	const body = await request.json();
+	const { filmId, entryStatus, dateWatched } = body;
 
-	const { userInfo, filmData } = body;
+	if (!filmId || !entryStatus) {
+		return json({ error: 'Missing fields' }, { status: 400 });
+	}
 
 	try {
-		const prismaFilm = await prisma.film.upsert({
-			where: { tmdbId: userInfo.filmId },
-			update: {}, // rien à updater si déjà présent
-			create: filmDTOToPrismaCreateInput({
-				...filmData
-			})
-		});
-		const userFilmEntry = await prisma.userFilmEntry.create({
-			data: {
+		// 1️⃣ S’assurer que le film existe (TMDB + collections incluses)
+		const film = await getOrCreateFilmByTmdbId(filmId);
+
+		if (!film) {
+			return json({ error: 'Film not found' }, { status: 404 });
+		}
+
+		// 2️⃣ Créer l’entrée user (ou retourner l’existante)
+		const userFilmEntry = await prisma.userFilmEntry.upsert({
+			where: {
+				userId_filmId: {
+					userId: user.id,
+					filmId: film.tmdbId
+				}
+			},
+			update: {
+				entryStatus,
+				dateWatched: dateWatched ? new Date(dateWatched) : undefined
+			},
+			create: {
 				userId: user.id,
-				filmId: userInfo.filmId,
-				userStatus: userInfo.userStatus,
-				dateWatched: userInfo.dateWatched ? new Date(userInfo.dateWatched) : undefined,
-				rating: userInfo.rating
+				filmId: film.tmdbId,
+				entryStatus,
+				dateWatched: dateWatched ? new Date(dateWatched) : undefined
 			},
 			include: {
-				film: true // on renvoie aussi les infos du film
+				film: true
 			}
 		});
 
 		return json(userFilmEntry, { status: 201 });
-	} catch (err: any) {
-		// Gestion de la contrainte unique userId+filmId
-		if (
-			err.code === 'P2002' &&
-			err.meta?.target?.includes('userId') &&
-			err.meta?.target?.includes('filmId')
-		) {
-			return json({ error: 'Film already exists for this user' }, { status: 409 });
-		}
+	} catch (err) {
 		console.error('Error creating userFilmEntry:', err);
 		return json({ error: 'Server error' }, { status: 500 });
 	}

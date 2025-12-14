@@ -15,11 +15,11 @@
     saving,
     status: "A_VOIR"
   })}
-  disabled={saving || userFilmEntryClient.userStatus === "A_VOIR"}
+  disabled={saving || userFilmEntryClient.entryStatus === "A_VOIR"}
 >
   {#if saving}
     Ajout en cours…
-  {:else if userFilmEntryClient.userStatus === "A_VOIR"}
+  {:else if userFilmEntryClient.entryStatus === "A_VOIR"}
     ✔ Film ajouté
   {:else}
     Ajouter à mes films à voir

@@ -1,7 +1,7 @@
 import { prisma } from '$lib/server/prisma.server';
 import { json } from '@sveltejs/kit';
 
-const ALLOWED_STATUS = ['A_VOIR', 'VU', 'PAS_VU'] as const;
+const ALLOWED_STATUS = ['A_VOIR', 'VU', 'PAS_VU', 'PAS_INTERESSE'] as const;
 type FilmStatus = (typeof ALLOWED_STATUS)[number];
 
 export async function PATCH({ params, request, locals }) {
@@ -30,7 +30,7 @@ export async function PATCH({ params, request, locals }) {
 			}
 		},
 		data: {
-			userStatus: status,
+			entryStatus: status,
 			dateWatched: status === 'VU' ? new Date() : null
 		}
 	});

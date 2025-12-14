@@ -1,5 +1,6 @@
-import type { Film, UserFilmEntry } from '@prisma/client';
+import type { UserFilmEntry } from '@prisma/client';
+import type { FilmWithCollection } from './FilmWithCollection.types';
 
 export interface UserFilmEntryClient extends UserFilmEntry {
-	film: Film; // le film complet
+	film: FilmWithCollection; // le film complet
 }

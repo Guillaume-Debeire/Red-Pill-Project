@@ -20,7 +20,11 @@ export async function GET({ params, locals }) {
 			}
 		},
 		include: {
-			film: true
+			film: {
+				include: {
+					belongsToCollection: true
+				}
+			}
 		}
 	});
 

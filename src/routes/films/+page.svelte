@@ -9,15 +9,15 @@
   const { userFilmEntryClients } = data;
 
   const toWatch = userFilmEntryClients.filter(
-    (entry) => entry.userStatus === 'A_VOIR'
+    (entry) => entry.entryStatus === 'A_VOIR'
   );
 
   const watched = userFilmEntryClients.filter(
-    (entry) => entry.userStatus === 'VU'
+    (entry) => entry.entryStatus === 'VU'
   );
 
   const notSeen = userFilmEntryClients.filter(
-    (entry) => entry.userStatus === 'PAS_VU'
+    (entry) => entry.entryStatus === 'PAS_VU'
   );
 </script>
 

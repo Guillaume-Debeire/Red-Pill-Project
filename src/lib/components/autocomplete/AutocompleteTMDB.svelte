@@ -1,7 +1,7 @@
 <script lang="ts">
     import { goto } from '$app/navigation';
   import { createEventDispatcher } from 'svelte';
-  import { searchTMDB } from '$lib/services/tmdb';
+  import { searchTMDB } from '$lib/services/tmdb/tmdb';
 	import type { FilmDetails } from '$lib/types/Film.types';
 
   const dispatch = createEventDispatcher();

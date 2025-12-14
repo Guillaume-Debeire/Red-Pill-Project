@@ -1,14 +1,11 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { page } from '$app/stores';
-	import FilmTitle from '$lib/components/layout/film-details/FilmTitle.svelte';
-	import type { Film, UserFilmEntry } from '@prisma/client';
 	import type { UserFilmEntryClient } from '$lib/types/FilmUser.types';
-	import { getOrCreateFilmByTmdbId } from '$lib/services/tmdb';
-	import { updateFilmStatus } from '$lib/api/userFilmEntry';
-	import { changeStatus } from '$lib/services/changeStatus';
 	import ButtonAddWatchlist from '$lib/components/ui/button-add-watchlist/ButtonAddWatchlist.svelte';
 	import ButtonAddWatchedList from '$lib/components/ui/button-add-watched-list/ButtonAddWatchedList.svelte';
+	import HeaderFilmDetail from '$lib/components/film-detail/HeaderFilmDetail.svelte';
+	import { getOrCreateFilmEntryByTmdbId } from '$lib/services/getOrCreateFilmEntryByTmdbId';
   
   let userFilmEntryClient: UserFilmEntryClient | null;
   let loading = true;
@@ -23,8 +20,8 @@
     }
 
     try {
-      userFilmEntryClient = await getOrCreateFilmByTmdbId(id);
-
+      userFilmEntryClient = await getOrCreateFilmEntryByTmdbId(id);
+      console.log('userFilm', userFilmEntryClient)
       if (!userFilmEntryClient) {
         return;
       }
@@ -54,41 +51,7 @@
     </div>
   {:else}
     <!-- HERO -->
-    <div class="relative">
-      {#if userFilmEntryClient.film.backdropPath}
-        <div
-          class="h-[260px] blur-xs bg-cover bg-center"
-          style="background-image: url('https://image.tmdb.org/t/p/w780{userFilmEntryClient.film.backdropPath}')"
-        />
-        <div class="absolute h-[105%] inset-0 bg-gradient-to-t from-black via-black/70 to-transparent" />
-      {/if}
-
-      <div class="absolute bottom-4 left-4 right-4 flex gap-6">
-        {#if userFilmEntryClient.film.posterPath}
-          <img
-            src={`https://image.tmdb.org/t/p/w300${userFilmEntryClient.film.posterPath}`}
-            alt={userFilmEntryClient.film.title}
-            class="w-32 rounded-lg shadow-lg"
-          />
-        {/if}
-
-        <div class="flex flex-col justify-end gap-2">
-          <FilmTitle film={userFilmEntryClient.film} />
-
-          <div class="flex items-center gap-4 text-sm text-zinc-400">
-            {#if userFilmEntryClient.film.releaseDate}
-              <span>{new Date(userFilmEntryClient.film.releaseDate).getFullYear()}</span>
-            {/if}
-            {#if userFilmEntryClient.film.runtime}
-              <span>{userFilmEntryClient.film.runtime} min</span>
-            {/if}
-            {#if userFilmEntryClient.film.voteAverage}
-              <span>⭐ {userFilmEntryClient.film.voteAverage.toFixed(1)} / 10</span>
-            {/if}
-          </div>
-        </div>
-      </div>
-    </div>
+    <HeaderFilmDetail userFilmEntryClient={userFilmEntryClient} />
 
     <!-- CONTENT -->
     <div class="p-6 space-y-6">
@@ -100,7 +63,6 @@
 
       <!-- SYNOPSIS -->
       <div class="space-y-2">
-        {userFilmEntryClient.film.releaseStatus}
         <h3 class="text-lg font-semibold text-white">Synopsis</h3>
         <p class="text-zinc-300 leading-relaxed">
           {userFilmEntryClient.film.overview ?? 'Pas de synopsis disponible.'}
@@ -108,7 +70,7 @@
       </div>
 
       <!-- META -->
-      <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 text-sm text-zinc-400">
+      <div class="grid bg-gray-800 rounded-lg p-5 grid-cols-2 sm:grid-cols-3 gap-4 text-sm text-zinc-400">
         {#if userFilmEntryClient.film.originalLanguage}
           <div>
             <span class="block text-zinc-500">Langue</span>
@@ -129,8 +91,30 @@
             ${userFilmEntryClient.film.budget.toLocaleString()}
           </div>
         {/if}
-      </div>
 
+        {#if userFilmEntryClient.film.revenue}
+          <div>
+            <span class="block text-zinc-500">Revenue</span>
+            ${userFilmEntryClient.film.revenue.toLocaleString()}
+          </div>
+        {/if}  
+        {#if userFilmEntryClient.dateWatched}
+        <div>
+            <span class="block text-zinc-500">Vu le</span>
+           
+            {userFilmEntryClient.dateWatched}
+        </div>
+      {/if}    
+      </div>
+        
+      {#if userFilmEntryClient.film.belongsToCollection}
+        <div>
+            <span class="block text-zinc-500">Collection</span>
+            <a class="px-2 py-1 rounded hover:bg-gray-800" href={`/collections/${userFilmEntryClient.film.belongsToCollection?.tmdbId}`}>
+{userFilmEntryClient.film.belongsToCollection?.name}
+            </a>
+        </div>
+      {/if}
     </div>
     {/if}
   </div>

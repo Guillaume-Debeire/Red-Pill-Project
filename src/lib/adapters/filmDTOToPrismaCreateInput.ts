@@ -1,22 +1,19 @@
 import { adaptFilmDetailsToFilmCreateInput } from '$lib/adapters/FilmAdapter';
 import type { FilmDetails } from '$lib/schemas/tmdb/filmTMDB.schema';
-import type { FilmDetailsDTO } from '$lib/types/Film.dto.types';
 import type { Prisma } from '@prisma/client';
 
 export function filmDTOToPrismaCreateInput(
 	film: Omit<FilmDetails, 'localid'>
 ): Prisma.FilmCreateInput {
-	console.log('film genre', film.genres);
-	console.log('type = ', typeof film.genres);
 	const formattedFilm = {
 		...adaptFilmDetailsToFilmCreateInput(film),
 		// 🌟 Collection (1:N)
 		belongsToCollection: film.belongs_to_collection?.id
 			? {
 					connectOrCreate: {
-						where: { id: film.belongs_to_collection?.id },
+						where: { tmdbId: film.belongs_to_collection?.id },
 						create: {
-							id: film.belongs_to_collection?.id,
+							tmdbId: film.belongs_to_collection?.id,
 							name: film.belongs_to_collection.name,
 							posterPath: film.belongs_to_collection.poster_path,
 							backdropPath: film.belongs_to_collection.backdrop_path

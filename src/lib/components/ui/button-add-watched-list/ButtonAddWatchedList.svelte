@@ -3,8 +3,7 @@
 	import type { UserFilmEntryClient } from "$lib/types/FilmUser.types";
 
   export let userFilmEntryClient: UserFilmEntryClient;
-    export let saving: boolean;
-
+  export let saving: boolean;
 </script>
 
 <button
@@ -16,13 +15,13 @@
     saving,
     status: "VU"
   })}
-  disabled={saving || userFilmEntryClient.userStatus === "VU" || userFilmEntryClient.film.releaseStatus !== "Released"}
+  disabled={saving || userFilmEntryClient.entryStatus === "VU" || userFilmEntryClient.film.releaseStatus !== "Released"}
 >
   {#if saving}
     Ajout en cours…
   {:else if userFilmEntryClient.film.releaseStatus !== "Released"}
     Pas encore sorti
-  {:else if userFilmEntryClient.userStatus === "VU"}
+  {:else if userFilmEntryClient.entryStatus === "VU"}
     ✔ Film ajouté
   {:else}
     Ajouter à mes films vus

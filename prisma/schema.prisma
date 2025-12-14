@@ -7,73 +7,92 @@ datasource db {
 }
 
 model User {
-  id        Int       @id @default(autoincrement())
-  email     String    @unique
-  password  String    // hash
-  username  String    @unique
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String // hash
+  username  String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   // Relation
-  films     UserFilmEntry[]
+  films       UserFilmEntry[]
+  collections UserCollectionEntry[]
 }
 
 model Film {
-  id                  Int                 @id @default(autoincrement())
-  tmdbId              Int                 @unique
-  adult               Boolean
-  backdropPath        String?
-  belongsToCollectionId    Int?
-  belongsToCollection BelongsToCollection?     @relation(fields: [belongsToCollectionId], references: [id])
-  budget              Int?
-  homepage            String?
-  imdbId              String?
-  originCountry       String[]
-  originalLanguage    String?
-  originalTitle       String?
-  overview            String?
-  popularity          Float?
-  posterPath          String?
-  releaseDate         DateTime?
-  revenue             Int?
-  runtime             Int?
-  releaseStatus       String?
-  tagline             String?
-  title               String
-  video               Boolean?
-  voteAverage         Float?
-  voteCount           Int?
+  id                    Int                  @id @default(autoincrement())
+  tmdbId                Int                  @unique
+  adult                 Boolean
+  backdropPath          String?
+  belongsToCollectionId Int?
+  belongsToCollection   BelongsToCollection? @relation(fields: [belongsToCollectionId], references: [id])
+  budget                Int?
+  homepage              String?
+  imdbId                String?
+  originCountry         String[]
+  originalLanguage      String?
+  originalTitle         String?
+  overview              String?
+  popularity            Float?
+  posterPath            String?
+  releaseDate           DateTime?
+  revenue               Int?
+  runtime               Int?
+  releaseStatus         String?
+  tagline               String?
+  title                 String
+  video                 Boolean?
+  voteAverage           Float?
+  voteCount             Int?
 
   genres              Genre[]             @relation("FilmGenres")
   productionCompanies ProductionCompany[] @relation("FilmCompanies")
-  productionCountries ProductionCountry[]  @relation("FilmProductionCountry")
-  spokenLanguages     SpokenLanguage[]     @relation("FilmSpokenLanguage")
+  productionCountries ProductionCountry[] @relation("FilmProductionCountry")
+  spokenLanguages     SpokenLanguage[]    @relation("FilmSpokenLanguage")
 
   // Relation vers table intermédiaire
-  users               UserFilmEntry[]
+  users UserFilmEntry[]
 }
 
 model UserFilmEntry {
-  id          Int      @id @default(autoincrement())
+  id          Int         @id @default(autoincrement())
   userId      Int
   filmId      Int
-  userStatus  FilmStatus   // "pas-vu" | "vu" | "a-voir"
+  entryStatus EntryStatus // "pas-vu" | "vu" | "a-voir"
   dateWatched DateTime?
-  rating      Int?     // 1 à 10
-  createdAt DateTime  @default(now())
+  rating      Int? // 1 à 10
+  createdAt   DateTime    @default(now())
 
-  user        User     @relation(fields: [userId], references: [id])
-  film        Film     @relation(fields: [filmId], references: [tmdbId])
+  user User @relation(fields: [userId], references: [id])
+  film Film @relation(fields: [filmId], references: [tmdbId])
 
   @@unique([userId, filmId]) // un utilisateur ne peut pas avoir deux fois le même film
 }
 
-enum FilmStatus {
+enum EntryStatus {
   A_VOIR
   VU
   PAS_VU
+  PAS_INTERESSE
 }
 
+model UserCollectionEntry {
+  id Int @id @default(autoincrement())
+
+  userId       Int
+  collectionId Int        
+
+  entryStatus EntryStatus
+  dateBegun   DateTime?
+  dateEnded   DateTime?
+  rating      Int? // 1 à 10
+  createdAt   DateTime    @default(now())
+
+  user       User                @relation(fields: [userId], references: [id])
+  collection BelongsToCollection @relation(fields: [collectionId], references: [tmdbId])
+
+  @@unique([userId, collectionId])
+}
 
 model Genre {
   id    Int    @id @default(autoincrement())
@@ -82,31 +101,32 @@ model Genre {
 }
 
 model ProductionCountry {
-  iso31661      String@id
-  name          String
-  films         Film[] @relation("FilmProductionCountry")
+  iso31661 String @id
+  name     String
+  films    Film[] @relation("FilmProductionCountry")
 }
 
 model SpokenLanguage {
-  iso6391       String @id
-  name          String
-  englishName   String
-  films         Film[] @relation("FilmSpokenLanguage")
+  iso6391     String @id
+  name        String
+  englishName String
+  films       Film[] @relation("FilmSpokenLanguage")
 }
 
-
 model ProductionCompany {
-  id            Int    @id @default(autoincrement())
+  id            Int     @id @default(autoincrement())
   name          String
   logoPath      String?
   originCountry String
-  films         Film[] @relation("FilmCompanies")
+  films         Film[]  @relation("FilmCompanies")
 }
 
 model BelongsToCollection {
-  id           Int    @id @default(autoincrement())
-  name         String
-  posterPath   String?
-  backdropPath String?
-  films        Film[]
+  id                    Int                   @id @default(autoincrement())
+  tmdbId                Int                  @unique
+  name                  String
+  posterPath            String?
+  backdropPath          String?
+  films                 Film[]
+  userCollectionEntries UserCollectionEntry[]
 }
