@@ -2,9 +2,9 @@ import type { FilmDashboardStats } from '$lib/types/FilmStats.types';
 import type { UserFilmEntryClient } from '$lib/types/FilmUser.types';
 
 export function computeDashboardStats(entries: UserFilmEntryClient[] = []): FilmDashboardStats {
-	const watched = entries.filter((e) => e.userStatus === 'VU');
-	const toWatch = entries.filter((e) => e.userStatus === 'A_VOIR');
-	const notSeen = entries.filter((e) => e.userStatus === 'PAS_VU');
+	const watched = entries.filter((e) => e.entryStatus === 'VU');
+	const toWatch = entries.filter((e) => e.entryStatus === 'A_VOIR');
+	const notSeen = entries.filter((e) => e.entryStatus === 'PAS_VU');
 
 	const totalRuntimeWatched = watched.reduce((sum, e) => sum + (e.film.runtime ?? 0), 0);
 

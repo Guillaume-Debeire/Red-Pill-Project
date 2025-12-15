@@ -12,7 +12,6 @@ export async function getUserCollectionEntryByCollectionId(
 
 		if (localRes.ok) {
 			const localData = (await localRes.json()) as UserCollectionEntryClient;
-			console.log('userCollection', localData);
 			return localData;
 		}
 		return null;

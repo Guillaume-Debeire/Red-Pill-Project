@@ -19,7 +19,8 @@
           <img
             src={`https://image.tmdb.org/t/p/w300${userFilmEntryClient.film.posterPath}`}
             alt={userFilmEntryClient.film.title}
-            class="w-32 rounded-lg shadow-lg"
+            class="film-card-image w-32 rounded-lg shadow-lg"
+            style:--poster="image-{userFilmEntryClient.filmId}" 
           />
         {/if}
 
@@ -39,4 +40,10 @@
           </div>
         </div>
       </div>
-    </div>
+</div>
+
+<style>
+  .film-card-image {
+    view-transition-name: var(--poster);
+  }
+</style>

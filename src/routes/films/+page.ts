@@ -9,8 +9,6 @@ export const load: PageLoad = async ({ fetch }) => {
 
 	const data = await res.json();
 
-	console.log('data', data);
-
 	return {
 		userFilmEntryClients: data // tableau de userFilmEntry + Film
 	};

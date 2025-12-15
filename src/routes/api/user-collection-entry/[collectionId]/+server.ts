@@ -31,8 +31,6 @@ export async function GET({ params, locals }) {
 		}
 	});
 
-	console.log('userCollection entry API:', JSON.stringify(userCollectionEntry?.collection));
-
 	if (!userCollectionEntry) {
 		return new Response('Collection non trouvée', { status: 404 });
 	}

@@ -30,7 +30,7 @@
   }
 </script>
 
-<div class="max-w-md mx-auto mt-20 p-6 rounded-lg shadow-lg bg-white">
+<div class="login-div max-w-md mx-auto mt-20 p-6 rounded-lg shadow-lg bg-white">
   <h1 class="text-2xl font-bold mb-6">Connexion</h1>
 
   {#if error}
@@ -73,3 +73,9 @@
 
   </form>
 </div>
+
+<style>
+  .login-div {
+    view-transition-name: login-page;
+  }
+</style>

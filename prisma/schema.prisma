@@ -9,7 +9,7 @@ datasource db {
 model User {
   id        Int      @id @default(autoincrement())
   email     String   @unique
-  password  String // hash
+  password  String   // hash
   username  String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -17,6 +17,31 @@ model User {
   // Relation
   films       UserFilmEntry[]
   collections UserCollectionEntry[]
+
+  // ⚡ Relations d'amitié
+  sentFriendRequests     FriendRequest[] @relation("SentRequests")
+  receivedFriendRequests FriendRequest[] @relation("ReceivedRequests")
+}
+
+model FriendRequest {
+  id        Int      @id @default(autoincrement())
+  senderId  Int
+  receiverId Int
+  status    FriendRequestStatus @default(PENDING)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  sender   User @relation("SentRequests", fields: [senderId], references: [id])
+  receiver User @relation("ReceivedRequests", fields: [receiverId], references: [id])
+
+  @@unique([senderId, receiverId]) // pas de double demande
+}
+
+enum FriendRequestStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+  BLOCKED
 }
 
 model Film {

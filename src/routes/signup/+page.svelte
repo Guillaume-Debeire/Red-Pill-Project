@@ -30,7 +30,7 @@
   }
 </script>
 
-<div class="max-w-md mx-auto mt-20 p-6 rounded-lg shadow-lg bg-white">
+<div class="login-div max-w-md mx-auto mt-20 p-6 rounded-lg shadow-lg bg-amber-50">
   <h1 class="text-2xl font-bold mb-6">Créer un compte</h1>
 
   {#if error}
@@ -42,7 +42,7 @@
     <div>
       <label class="font-semibold block mb-1">Email</label>
       <input
-        class="w-full border p-2 rounded"
+        class="w-full bg-white border p-2 rounded"
         type="email"
         bind:value={email}
         required
@@ -52,7 +52,7 @@
     <div>
       <label class="font-semibold block mb-1">Nom d'utilisateur</label>
       <input
-        class="w-full border p-2 rounded"
+        class="w-full bg-white border p-2 rounded"
         type="text"
         bind:value={username}
         required
@@ -62,7 +62,7 @@
     <div>
       <label class="font-semibold block mb-1">Mot de passe</label>
       <input
-        class="w-full border p-2 rounded"
+        class="w-full bg-white border p-2 rounded"
         type="password"
         bind:value={password}
         required
@@ -83,3 +83,10 @@
 
   </form>
 </div>
+
+
+<style>
+  .login-div {
+    view-transition-name: login-page;
+  }
+</style>

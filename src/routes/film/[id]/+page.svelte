@@ -21,7 +21,6 @@
 
     try {
       userFilmEntryClient = await getOrCreateFilmEntryByTmdbId(id);
-      console.log('userFilm', userFilmEntryClient)
       if (!userFilmEntryClient) {
         return;
       }
@@ -57,9 +56,9 @@
     <div class="p-6 space-y-6">
 
       <!-- ACTION -->
-      <ButtonAddWatchedList userFilmEntryClient={userFilmEntryClient} saving={saving}/>
+      <ButtonAddWatchedList userFilmEntryClient={userFilmEntryClient}/>
 
-      <ButtonAddWatchlist userFilmEntryClient={userFilmEntryClient} saving={saving} />
+      <ButtonAddWatchlist userFilmEntryClient={userFilmEntryClient} />
 
       <!-- SYNOPSIS -->
       <div class="space-y-2">

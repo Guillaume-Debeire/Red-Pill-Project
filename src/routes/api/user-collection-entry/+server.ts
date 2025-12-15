@@ -32,7 +32,6 @@ export async function POST({ request, locals }) {
 		});
 
 		if (existingEntry) {
-			console.log("ça existe déjà mon pote j'me casse");
 			return Response.json(existingEntry);
 		}
 
@@ -57,8 +56,6 @@ export async function POST({ request, locals }) {
 
 		const tmdbCollection = await tmdbRes.json();
 
-		console.log('tmdbCollection', tmdbCollection);
-
 		/* ────────────────────────────────
 		   4️⃣ S’ASSURER QUE LA COLLECTION EXISTE EN DB
 		──────────────────────────────── */
@@ -77,7 +74,6 @@ export async function POST({ request, locals }) {
 		   5️⃣ FILMS + USER FILM ENTRIES
 		──────────────────────────────── */
 		for (const tmdbFilm of tmdbCollection.parts) {
-			console.log('film', tmdbFilm);
 			// 5a. Film (DB)
 			const film = await getOrCreateFilmByTmdbId(tmdbFilm.id);
 
@@ -85,8 +81,6 @@ export async function POST({ request, locals }) {
 				console.error('Impossible de créer le film', tmdbFilm.id);
 				continue;
 			}
-
-			console.log('film', film);
 
 			// 5c. UserFilmEntry (idempotent)
 			await prisma.userFilmEntry.upsert({

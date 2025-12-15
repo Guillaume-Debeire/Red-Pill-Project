@@ -1,22 +1,23 @@
 <script lang="ts">
+	import CollectionCard from '$lib/components/cards/collection-card/collection-card.svelte';
   import FilmCard from '$lib/components/cards/film-card/FilmCard.svelte';
-  import type { UserFilmEntryClient } from '$lib/types/FilmUser.types';
+	import type { UserCollectionEntryClient } from '$lib/types/UserCollection.types';
 
   export let data: {
-    userFilmEntryClients: UserFilmEntryClient[];
+    userCollectionEntryClient: UserCollectionEntryClient[];
   };
 
-  const { userFilmEntryClients } = data;
+  const { userCollectionEntryClient } = data;
 
-  const toWatch = userFilmEntryClients.filter(
+  const toWatch = userCollectionEntryClient.filter(
     (entry) => entry.entryStatus === 'A_VOIR'
   );
 
-  const watched = userFilmEntryClients.filter(
+  const watched = userCollectionEntryClient.filter(
     (entry) => entry.entryStatus === 'VU'
   );
 
-  const notSeen = userFilmEntryClients.filter(
+  const notSeen = userCollectionEntryClient.filter(
     (entry) => entry.entryStatus === 'PAS_VU'
   );
 </script>
@@ -28,7 +29,7 @@
       🎬 Mes films
     </h1>
 
-    {#if userFilmEntryClients.length === 0}
+    {#if userCollectionEntryClient.length === 0}
       <p class="text-center text-zinc-400">
         Aucun film enregistré pour le moment.
       </p>
@@ -46,7 +47,7 @@
           <ul class="flex flex-wrap gap-4">
             {#each toWatch as entry}
               <li class="bg-neutral-800 rounded-lg shadow">
-                <FilmCard userFilmEntryClient={entry} />
+                <CollectionCard userCollectionEntryClient={entry} />
               </li>
             {/each}
           </ul>
@@ -65,7 +66,7 @@
           <ul class="flex flex-wrap gap-4">
             {#each watched as entry}
               <li class="bg-neutral-800 rounded-lg shadow">
-                <FilmCard userFilmEntryClient={entry} />
+                <CollectionCard userCollectionEntryClient={entry} />
               </li>
             {/each}
           </ul>
@@ -84,7 +85,7 @@
           <ul class="flex flex-wrap gap-4">
             {#each notSeen as entry}
               <li class="bg-neutral-800 rounded-lg shadow">
-                <FilmCard userFilmEntryClient={entry} />
+                <CollectionCard userCollectionEntryClient={entry} />
               </li>
             {/each}
           </ul>

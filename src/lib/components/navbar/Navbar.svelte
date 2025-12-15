@@ -4,7 +4,7 @@
   export let user: { id: number; email: string; username: string } | undefined;
 </script>
 
-<nav class="flex fixed z-20 w-full justify-between items-center px-6 py-4 bg-zinc-900 text-white">
+<nav class="flex z-20 w-full justify-between items-center px-6 py-4 bg-zinc-900 text-white">
   <a href="/" class="text-xl font-bold">Redpill</a>
 
   <div class="flex items-center gap-4">

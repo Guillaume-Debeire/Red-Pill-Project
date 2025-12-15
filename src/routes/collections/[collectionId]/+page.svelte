@@ -13,7 +13,6 @@
   onMount(async () => {
     try {
       collection = await getOrCreateCollectionEntryById(Number(params.collectionId));
-      console.log('collection en front: ', collection)
     } catch {
       error = 'Erreur lors du chargement de la collection';
     } finally {

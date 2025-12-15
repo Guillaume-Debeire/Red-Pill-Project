@@ -1,20 +1,13 @@
 import { updateFilmStatus } from '$lib/api/userFilmEntry';
 import type { FilmStatus } from '$lib/types/FilmStatus.types';
-import type { UserFilmEntryClient } from '$lib/types/FilmUser.types';
-import { Prisma } from '@prisma/client';
 
 interface Params {
-	userFilmEntryClient: UserFilmEntryClient;
+	filmId: number;
 	status: FilmStatus;
-	saving: boolean;
 }
-export async function changeStatus({ userFilmEntryClient, status, saving }: Params) {
-	if (!userFilmEntryClient) return;
-	saving = true;
-	try {
-		const updated = await updateFilmStatus(userFilmEntryClient.filmId, status);
-		userFilmEntryClient.entryStatus = updated.entryStatus;
-	} finally {
-		saving = false;
-	}
+
+export async function changeStatus({ filmId, status }: Params) {
+	if (!filmId) return;
+
+	return await updateFilmStatus(filmId, status);
 }

@@ -31,8 +31,6 @@ export async function getOrCreateFilmEntryByTmdbId(
 			...filmData
 		});
 
-		console.log('prismaData');
-
 		// 2️⃣ Laisser le serveur gérer le reste
 		const res = await fetch('/api/user-film-entry', {
 			method: 'POST',
