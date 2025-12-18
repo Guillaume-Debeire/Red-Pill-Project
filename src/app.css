@@ -2,3 +2,32 @@
 ::view-transition-new(root) {
 	animation-duration: 0.1s;
 }
+
+/* Firefox */
+html {
+	scrollbar-width: thin;
+	scrollbar-color: #6b7280 #0f172a;
+}
+
+/* Chrome / Edge / Safari */
+html::-webkit-scrollbar {
+	width: 10px;
+}
+
+html::-webkit-scrollbar-button {
+	background-color: blue;
+}
+
+html::-webkit-scrollbar-track {
+	background: transparent; /* fond */
+}
+
+html::-webkit-scrollbar-thumb {
+	background-color: #6b7280;
+	border-radius: 999px;
+	border: 2px solid #0f172a;
+}
+
+html::-webkit-scrollbar-thumb:hover {
+	background-color: #9ca3af;
+}

@@ -2,17 +2,19 @@
   import { onMount } from 'svelte';
   import type { UserCollectionEntryClient } from '$lib/types/UserCollection.types';
 	import { getOrCreateCollectionEntryById } from '$lib/api/userCollectionEntry';
+	import FilmPoster from '$lib/components/transition/FilmPoster.svelte';
+	import PosterNotFound from '$lib/components/transition/PosterNotFound.svelte';
 ;
 
   export let params;
 
-  let collection: UserCollectionEntryClient | null = null;
+  let userCollectionEntry: UserCollectionEntryClient | null = null;
   let loading = true;
   let error: string | null = null;
 
   onMount(async () => {
     try {
-      collection = await getOrCreateCollectionEntryById(Number(params.collectionId));
+      userCollectionEntry = await getOrCreateCollectionEntryById(Number(params.collectionId));
     } catch {
       error = 'Erreur lors du chargement de la collection';
     } finally {
@@ -20,39 +22,39 @@
     }
   });
 
-  $: totalFilms = collection?.collection.films.length ?? 0;
+  $: totalFilms = userCollectionEntry?.collection.films.length ?? 0;
 </script>
 
 <div class="min-h-screen bg-neutral-900 text-white px-6 pt-20">
   {#if loading}
     <p class="text-zinc-400">Chargement de la collection…</p>
 
-  {:else if error || !collection}
+  {:else if error || !userCollectionEntry}
     <p class="text-red-400">{error ?? 'Collection introuvable'}</p>
 
   {:else}
     <!-- HEADER -->
     <div class="flex gap-6 items-end mb-10">
-      {#if collection.collection.posterPath}
-        <img
-          src={`https://image.tmdb.org/t/p/w300${collection.collection.posterPath}`}
-          alt={collection.collection.name}
-          class="w-40 rounded-lg shadow"
-        />
+      {#if userCollectionEntry.collection.posterPath}
+          <img
+            src={`https://image.tmdb.org/t/p/w300${userCollectionEntry.collection.posterPath}`}
+            alt={userCollectionEntry.collection.name}
+            class="w-40 rounded-lg shadow"
+          />
       {/if}
 
       <div class="space-y-2">
         <h1 class="text-3xl font-bold">
-          {collection.collection.name}
+          {userCollectionEntry.collection.name}
         </h1>
 
         <p class="text-zinc-400">
-          Statut : <span class="font-medium">{collection.entryStatus}</span>
+          Statut : <span class="font-medium">{userCollectionEntry.entryStatus}</span>
         </p>
 
-        {#if collection.rating}
+        {#if userCollectionEntry.rating}
           <p class="text-zinc-400">
-            Note : {collection.rating} / 10
+            Note : {userCollectionEntry.rating} / 10
           </p>
         {/if}
 
@@ -69,15 +71,13 @@
       </h2>
 
       <ul class="flex flex-wrap gap-4">
-        {#each collection.collection.films as film}
+        {#each userCollectionEntry.collection.films as film}
           <li class="bg-neutral-800 rounded-lg p-3 w-40 hover:bg-neutral-700 transition">
-            <a href={`/film/${film.tmdbId}`}>
+            <a href={`/films/${film.tmdbId}`}>
               {#if film.posterPath}
-              <img
-              src={`https://image.tmdb.org/t/p/w200${film.posterPath}`}
-              alt={film.title}
-              class="rounded mb-2"
-              />
+              <FilmPoster film={film}/>
+              {:else}
+              <PosterNotFound title={film.title ?? ""} />
               {/if}
               
               <p class="text-sm font-medium leading-tight">

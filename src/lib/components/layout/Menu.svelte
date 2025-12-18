@@ -15,7 +15,7 @@
 </script>
 
 {#if user}
-  <nav class="rounded-full bg-gray-200  max-w-5xl mx-auto px-2 py-1.5 flex items-center justify-between text-black">
+  <nav class="rounded-full text-white  max-w-5xl mx-auto px-2 py-1.5 flex items-center justify-betwee">
     <div class="flex items-center gap-6">
       {#each links as link}
       <div class="flex flex-col group">
@@ -26,7 +26,7 @@
         >
         {link.label}
       </a>
-        <div class={classNames("transition-opacity rounded-full opacity-0 nav-item-underline mx-auto w-2/3 h-0.5 bg-black",
+        <div class={classNames("transition-opacity rounded-full opacity-0 nav-item-underline mx-auto w-2/3 h-0.5 bg-red-900",
           {
             "opacity-100 navigation-item": page.url.pathname.startsWith(link.href)
           }

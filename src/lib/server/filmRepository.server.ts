@@ -12,6 +12,8 @@ export async function addFilm(film: FilmDetails) {
 		...film
 	});
 
+	console.log('prisma data', prismaData);
+
 	return await prisma.film.create({
 		data: prismaData
 	});

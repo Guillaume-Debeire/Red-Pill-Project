@@ -4,15 +4,15 @@
   export let user: { id: number; email: string; username: string } | undefined;
 </script>
 
-<nav class="flex z-20 w-full justify-between items-center px-6 py-4 bg-zinc-900 text-white">
+<nav class="flex z-20 w-full justify-between min-h-20 items-center px-6 py-4 bg-linear-to-t from-black via-black/40 to-black/5 text-white">
   <a href="/" class="text-xl font-bold">Redpill</a>
 
-  <div class="flex items-center gap-4">
+  <div class="flex w-full items-center gap-4">
 
     {#if user}
       <Menu user={user} />
 
-      <span class="opacity-80">Yo {user.username} 👊</span>
+      <span class="opacity-80">{user.username.substring(0, 1)}.</span>
 
       <form method="POST" action="/logout">
         <button

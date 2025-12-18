@@ -1,26 +1,21 @@
 <script lang="ts">
+	import FilmPoster from "$lib/components/transition/FilmPoster.svelte";
+	import PosterNotFound from "$lib/components/transition/PosterNotFound.svelte";
 	import type { UserFilmEntryClient } from "$lib/types/FilmUser.types";
 
   export let userFilmEntryClient: UserFilmEntryClient;
 </script>
 
 
-<article class="film-card-image group relative w-[101px] h-[152px]  lg:w-[202px] lg:h-[304px] rounded-lg overflow-hidden" style:--poster="image-{userFilmEntryClient.filmId}">
-  <a href={`/film/${userFilmEntryClient.filmId}`}>
+<article class="group w-[101px] h-[152px]  lg:w-[151px] lg:h-[202px] rounded-lg overflow-hidden">
+  <a href={`/films/${userFilmEntryClient.filmId}`}>
     {#if userFilmEntryClient.film.posterPath}
-      <img 
-        class="absolute group-hover:scale-110  transition-all duration-700 h-full w-full object-cover" 
-        src={`https://image.tmdb.org/t/p/w300${userFilmEntryClient.film.posterPath}`} alt="film-poster"  
-         
-      />
+    <FilmPoster 
+      film={userFilmEntryClient.film}
+      className="group-hover:scale-110 transition-all duration-700 h-full w-full object-cover"
+    />
     {:else}
-      <p class="absolute h-full w-full text-[rgba(0, 0, 0, 0.2)]">N/A</p>
+      <PosterNotFound title={userFilmEntryClient.film.title} className="group-hover:scale-105 transition-all group-hover:text-gray-200" />
     {/if}  
   </a>
 </article>
-
-<style>
-  .film-card-image {
-    view-transition-name: var(--poster);
-  }
-</style>

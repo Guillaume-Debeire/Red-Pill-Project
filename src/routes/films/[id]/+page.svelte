@@ -45,23 +45,38 @@
     </div>
 
   {:else if !userFilmEntryClient}
-    <div class="flex items-center justify-center min-h-[300px] text-red-400">
-      Film non trouvé.
+    <div class="flex items-center justify-center min-h-[300px] gap-4 flex-col">
+      <p class="text-red-400">Film non trouvé.</p>
+      <a href="/search">Rechercher un autre film</a>
     </div>
+    
   {:else}
-    <!-- HERO -->
+    <!-- HERO -->      
+     <div class="relative">
+      <div class="h-[260px] ">
+       {#if userFilmEntryClient.film.backdropPath}
+       <div
+       class="blur-xs bg-cover bg-center"
+       style="background-image: url('https://image.tmdb.org/t/p/w780{userFilmEntryClient.film.backdropPath}')"
+       ></div>
+       <div class="absolute h-[105%] inset-0 bg-linear-to-t frm-black via-black/80 to-black/5"></div>
+       {:else}
+        <div class="absolute h-[105%] inset-0 bg-linear-to-t frm-black via-black/80 to-black/5"></div>
+       {/if}
+       </div>
+      </div>
+      
+          <!-- CONTENT -->
+          <div class="px-6 lg:px-20 space-y-6">
     <HeaderFilmDetail userFilmEntryClient={userFilmEntryClient} />
-
-    <!-- CONTENT -->
-    <div class="p-6 space-y-6">
 
       <!-- ACTION -->
        <ActionButtons userFilmEntryClient={userFilmEntryClient} />
 
       <!-- SYNOPSIS -->
       <div class="space-y-2">
-        <h3 class="text-lg font-semibold text-white">Synopsis</h3>
-        <p class="text-zinc-300 leading-relaxed">
+        <h3 class="text-xl font-semibold text-white">Synopsis</h3>
+        <p class="text-zinc-300 leading-relaxed max-w-2xl">
           {userFilmEntryClient.film.overview ?? 'Pas de synopsis disponible.'}
         </p>
       </div>
@@ -101,14 +116,34 @@
            
             {userFilmEntryClient.dateWatched}
         </div>
-      {/if}    
+        {/if} 
+        {#if userFilmEntryClient.film.originCountry}
+        <div>
+            <span class="block text-zinc-500">Pays d'origine</span>
+           
+            {userFilmEntryClient.film.originCountry.map((pays) => (
+              pays
+            ))
+            
+            }
+        </div>
+        {/if}
+
+        <!-- redirige vers le site du film
+        {#if userFilmEntryClient.film.homepage}
+        <div>
+            <span class="block text-zinc-500">homepage</span>
+           
+            <a href={userFilmEntryClient.film.homepage}>homepage</a>
+        </div>
+        {/if}   -->
       </div>
         
-      {#if userFilmEntryClient.film.belongsToCollection}
+      {#if userFilmEntryClient.film.belongsToCollectionId}
         <div>
             <span class="block text-zinc-500">Collection</span>
             <a class="px-2 py-1 rounded hover:bg-gray-800" href={`/collections/${userFilmEntryClient.film.belongsToCollection?.tmdbId}`}>
-{userFilmEntryClient.film.belongsToCollection?.name}
+                {userFilmEntryClient.film.belongsToCollection?.name}
             </a>
         </div>
       {/if}

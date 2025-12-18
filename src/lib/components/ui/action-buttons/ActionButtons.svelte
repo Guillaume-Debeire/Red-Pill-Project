@@ -1,12 +1,15 @@
 <script lang="ts">
   import { changeStatus } from "$lib/services/changeStatus";
   import type { UserFilmEntryClient } from "$lib/types/FilmUser.types";
+	import { en } from "zod/locales";
 	import ButtonAddWatchedList from "./button-add-watched-list/ButtonAddWatchedList.svelte";
+	import { EntryStatus } from "@prisma/client";
 
   export let userFilmEntryClient: UserFilmEntryClient;
 
   let savingWatched = false;
   let savingToWatch = false;
+  let savingNotInteressed = false;
 
   const handleToWatch = async () => {
     if (savingToWatch) return;
@@ -51,25 +54,54 @@
     }
   };
 
+    const handleNotInteressed = async () => {
+    if (savingNotInteressed) return;
+
+    savingNotInteressed = true;
+
+    try {
+      await changeStatus({
+        filmId: userFilmEntryClient.film.tmdbId,
+        status: "PAS_INTERESSE"
+      });
+
+      // 🔥 UI instantanée
+     userFilmEntryClient = {
+        ...userFilmEntryClient,
+        entryStatus: "PAS_INTERESSE"
+      };
+    } catch (e) {
+      console.error(e);
+    } finally {
+      savingNotInteressed = false;
+    }
+  };
+
   $: labelWatched = savingWatched
   ? "Ajout en cours…"
   : userFilmEntryClient.film.releaseStatus !== "Released"
     ? "Pas encore sorti"
     : userFilmEntryClient.entryStatus === "VU"
-      ? "✔ Film ajouté"
-      : "Ajouter à mes films vus";
+      ? "Film ajouté"
+      : "Vu";
 
   $: labelToWatch = savingToWatch
   ? "Ajout en cours…"
-  : userFilmEntryClient.film.releaseStatus !== "Released"
-    ? "Pas encore sorti"
     : userFilmEntryClient.entryStatus === "A_VOIR"
-      ? "✔ Film ajouté"
-      : "Ajouter à mes films à voir";
+      ? "Film ajouté"
+      : "A voir";
+
+  $: labelNotInteressed = savingNotInteressed
+  ? "Suppression en cours…"
+    : userFilmEntryClient.entryStatus === "A_VOIR"
+      ? "Pas interessé"
+      : "Pas interessé";
       
 </script>
 
-<ButtonAddWatchedList 
+<div class="flex gap-4 flex-wrap">
+
+  <ButtonAddWatchedList 
   label={labelWatched}
   onClick={handleWatched}   
   disabled={
@@ -80,11 +112,22 @@
 />
 
 <ButtonAddWatchedList 
-  label={labelToWatch}
-  onClick={handleToWatch}   
-  disabled={
-    savingToWatch ||
-    userFilmEntryClient.entryStatus === "A_VOIR"
-  } 
+label={labelToWatch}
+onClick={handleToWatch}   
+disabled={
+  savingToWatch ||
+  userFilmEntryClient.entryStatus === "A_VOIR"
+} 
 />
+
+<ButtonAddWatchedList 
+label={labelNotInteressed}
+onClick={handleNotInteressed}   
+disabled={
+  savingNotInteressed ||
+  userFilmEntryClient.entryStatus === "PAS_INTERESSE"
+} 
+className={userFilmEntryClient.entryStatus === "PAS_INTERESSE" ? "" : "hover:bg-red-800"}
+/>
+</div>
 

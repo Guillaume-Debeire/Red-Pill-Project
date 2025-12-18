@@ -1,5 +1,7 @@
 <script lang="ts">
   import FilmCard from '$lib/components/cards/film-card/FilmCard.svelte';
+	import RedirectFilmCard from '$lib/components/cards/film-card/RedirectFilmCard.svelte';
+	import SectionAVoir from '$lib/features/film-list/SectionAVoir.svelte';
   import type { UserFilmEntryClient } from '$lib/types/FilmUser.types';
 
   export let data: {
@@ -21,10 +23,10 @@
   );
 </script>
 
-<div class="min-h-screen bg-neutral-900 text-white px-4 pt-20">
+<div class="min-h-screen bg-neutral-900 text-white px-4 py-20">
   <div class="max-w-6xl mx-auto space-y-16">
 
-    <h1 class="text-3xl font-bold text-center">
+    <h1 class="text-3xl font-bold text-center list-title">
       🎬 Mes films
     </h1>
 
@@ -35,23 +37,7 @@
     {:else}
 
       <!-- À VOIR -->
-      <section class="space-y-4">
-        <h2 class="text-xl font-semibold text-blue-400">
-          À voir ({toWatch.length})
-        </h2>
-
-        {#if toWatch.length === 0}
-          <p class="text-zinc-500">Aucun film à voir.</p>
-        {:else}
-          <ul class="flex flex-wrap gap-4">
-            {#each toWatch as entry}
-              <li class="bg-neutral-800 rounded-lg shadow">
-                <FilmCard userFilmEntryClient={entry} />
-              </li>
-            {/each}
-          </ul>
-        {/if}
-      </section>
+      <SectionAVoir userFilmEntryClients={userFilmEntryClients} />
 
       <!-- VUS -->
       <section class="space-y-4">
@@ -60,11 +46,11 @@
         </h2>
 
         {#if watched.length === 0}
-          <p class="text-zinc-500">Aucun film vu.</p>
+          <RedirectFilmCard />
         {:else}
           <ul class="flex flex-wrap gap-4">
             {#each watched as entry}
-              <li class="bg-neutral-800 rounded-lg shadow">
+              <li class="rounded-lg shadow">
                 <FilmCard userFilmEntryClient={entry} />
               </li>
             {/each}
@@ -83,7 +69,7 @@
         {:else}
           <ul class="flex flex-wrap gap-4">
             {#each notSeen as entry}
-              <li class="bg-neutral-800 rounded-lg shadow">
+              <li class="rounded-lg shadow">
                 <FilmCard userFilmEntryClient={entry} />
               </li>
             {/each}
@@ -94,3 +80,9 @@
     {/if}
   </div>
 </div>
+
+<style>
+  .list-title{
+    view-transition-name: list-title;
+  }
+</style>

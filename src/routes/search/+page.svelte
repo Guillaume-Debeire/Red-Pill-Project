@@ -1,10 +1,10 @@
 <script>
-  import AutocompleteTMDB from '$lib/components/autocomplete/AutocompleteTMDB.svelte';
+	import AutocompleteFilmTMDB from '$lib/components/autocomplete/AutocompleteFilmTMDB.svelte';
 </script>
 
-<div class="flex flex-col items-center w-3xl mt-[200px] rounded-2xl py-12 m-auto justify-center bg-neutral-900 text-white px-4">
-  <div class="w-1/2">
+<div class="min-h-screen bg-neutral-900 text-white px-4 pt-20">
+  <div class="w-1/2 mx-auto">
 
-    <AutocompleteTMDB />
+    <AutocompleteFilmTMDB />
   </div>
 </div>

@@ -1,14 +1,15 @@
 <script lang="ts">
+	import classNames from "classnames";
+
   export let onClick;
   export let label: string;
   export let disabled: boolean;
+  export let className: string = "";
 </script>
 
 
 <button
-  class="w-full sm:w-auto px-6 py-2 rounded-lg font-medium
-          bg-blue-600 hover:bg-blue-700 transition
-          disabled:opacity-50 disabled:cursor-not-allowed"
+  class={classNames("w-full min-w-50 sm:w-auto px-6 py-2 rounded-lg font-medium bg-cyan-600 hover:bg-cyan-900 transition disabled:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed hover:cursor-pointer", className)}
   on:click={onClick}
   disabled={disabled}
 >

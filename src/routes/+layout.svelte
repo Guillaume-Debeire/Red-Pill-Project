@@ -18,7 +18,7 @@
 	<Navbar user={data.user} />
 	
 	<!-- Wrapper pour le contenu avec padding-top égal à la hauteur de la navbar -->
-	<div class="content-wrapper h-full">
+	<div class="content-wrapper max-h-[calc(100vh-82px)] overflow-auto">
 		{@render children()}
 	</div>
 </div>

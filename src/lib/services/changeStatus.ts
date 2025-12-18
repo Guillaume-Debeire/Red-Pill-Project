@@ -1,9 +1,10 @@
 import { updateFilmStatus } from '$lib/api/userFilmEntry';
 import type { FilmStatus } from '$lib/types/FilmStatus.types';
+import type { UserFilmEntry } from '@prisma/client';
 
 interface Params {
 	filmId: number;
-	status: FilmStatus;
+	status: UserFilmEntry['entryStatus'];
 }
 
 export async function changeStatus({ filmId, status }: Params) {

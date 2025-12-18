@@ -46,13 +46,13 @@
 
   {#if open}
     <ul
-      class="absolute z-10 left-0 right-0 bg-white border rounded-xl mt-2 max-h-60 overflow-y-auto shadow-lg"
+      class="absolute z-10 left-0 right-0 bg-black rounded-xl mt-2 max-h-120 overflow-y-auto shadow-lg"
     >
       {#each results as film}
         <li
-          class="px-3 py-2 cursor-pointer hover:bg-gray-100 flex gap-3 items-center"
+          class="px-3 py-2 cursor-pointer transition-colors hover:bg-gray-800 flex gap-3 items-center"
         >
-          <a class="w-full h-full" href={`/film/${film.id}`}
+          <a class="w-full h-full" href={`/films/${film.id}`}
             >
 
             {#if film.poster_path}

@@ -22,11 +22,11 @@
   );
 </script>
 
-<div class="min-h-screen bg-neutral-900 text-white px-4 pt-20">
+<div class="min-h-screen bg-neutral-900 text-white px-4 py-20">
   <div class="max-w-6xl mx-auto space-y-16">
 
-    <h1 class="text-3xl font-bold text-center">
-      🎬 Mes films
+    <h1 class="text-3xl font-bold text-center list-title">
+      🎬 Mes Collections
     </h1>
 
     {#if userCollectionEntryClient.length === 0}
@@ -61,7 +61,7 @@
         </h2>
 
         {#if watched.length === 0}
-          <p class="text-zinc-500">Aucun film vu.</p>
+          <p class="text-zinc-500">Aucune collection vue.</p>
         {:else}
           <ul class="flex flex-wrap gap-4">
             {#each watched as entry}
@@ -95,3 +95,9 @@
     {/if}
   </div>
 </div>
+
+<style>
+  .list-title{
+    view-transition-name: list-title;
+  }
+</style>

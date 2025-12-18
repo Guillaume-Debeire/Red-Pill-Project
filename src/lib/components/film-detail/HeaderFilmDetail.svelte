@@ -1,28 +1,25 @@
 <script lang="ts">
 	import type { UserFilmEntryClient } from "$lib/types/FilmUser.types";
 	import FilmTitle from "../layout/film-details/FilmTitle.svelte";
+	import FilmPoster from "../transition/FilmPoster.svelte";
+	import PosterNotFound from "../transition/PosterNotFound.svelte";
 
   export let userFilmEntryClient: UserFilmEntryClient;
+  console.log('userfilm', userFilmEntryClient)
 </script>
 
 <div class="relative">
-      {#if userFilmEntryClient.film.backdropPath}
-        <div
-          class="h-[260px] blur-xs bg-cover bg-center"
-          style="background-image: url('https://image.tmdb.org/t/p/w780{userFilmEntryClient.film.backdropPath}')"
-        />
-        <div class="absolute h-[105%] inset-0 bg-gradient-to-t from-black via-black/70 to-transparent" />
-      {/if}
+
 
       <div class="absolute bottom-4 left-4 right-4 flex gap-6">
-        {#if userFilmEntryClient.film.posterPath}
-          <img
-            src={`https://image.tmdb.org/t/p/w300${userFilmEntryClient.film.posterPath}`}
-            alt={userFilmEntryClient.film.title}
-            class="film-card-image w-32 rounded-lg shadow-lg"
-            style:--poster="image-{userFilmEntryClient.filmId}" 
-          />
-        {/if}
+        <div class="min-w-32 min-h-48">
+
+          {#if userFilmEntryClient.film.posterPath}
+          <FilmPoster film={userFilmEntryClient.film} />
+          {:else}
+          <PosterNotFound title="N/A" />
+          {/if}
+        </div>
 
         <div class="flex flex-col justify-end gap-2">
           <FilmTitle film={userFilmEntryClient.film} />
@@ -42,8 +39,3 @@
       </div>
 </div>
 
-<style>
-  .film-card-image {
-    view-transition-name: var(--poster);
-  }
-</style>
