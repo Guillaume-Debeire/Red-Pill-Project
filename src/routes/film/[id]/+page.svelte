@@ -2,14 +2,12 @@
   import { onMount } from 'svelte';
   import { page } from '$app/stores';
 	import type { UserFilmEntryClient } from '$lib/types/FilmUser.types';
-	import ButtonAddWatchlist from '$lib/components/ui/button-add-watchlist/ButtonAddWatchlist.svelte';
-	import ButtonAddWatchedList from '$lib/components/ui/button-add-watched-list/ButtonAddWatchedList.svelte';
 	import HeaderFilmDetail from '$lib/components/film-detail/HeaderFilmDetail.svelte';
 	import { getOrCreateFilmEntryByTmdbId } from '$lib/services/getOrCreateFilmEntryByTmdbId';
+	import ActionButtons from '$lib/components/ui/action-buttons/ActionButtons.svelte';
   
   let userFilmEntryClient: UserFilmEntryClient | null;
   let loading = true;
-  let saving = false;
 
   onMount(async () => {
     const id = Number($page.params.id); // <- $page reactive
@@ -27,6 +25,8 @@
       if (!userFilmEntryClient.filmId) {
         throw new Error("filmId n'est pas bon")
       }
+        console.log('userFilmEntry', userFilmEntryClient)
+
 
     } catch (err) {
       console.error('Erreur récupération film TMDb:', err);
@@ -56,9 +56,7 @@
     <div class="p-6 space-y-6">
 
       <!-- ACTION -->
-      <ButtonAddWatchedList userFilmEntryClient={userFilmEntryClient}/>
-
-      <ButtonAddWatchlist userFilmEntryClient={userFilmEntryClient} />
+       <ActionButtons userFilmEntryClient={userFilmEntryClient} />
 
       <!-- SYNOPSIS -->
       <div class="space-y-2">

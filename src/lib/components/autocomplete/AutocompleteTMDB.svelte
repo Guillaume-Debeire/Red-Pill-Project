@@ -1,8 +1,6 @@
 <script lang="ts">
-    import { goto } from '$app/navigation';
   import { createEventDispatcher } from 'svelte';
   import { searchTMDB } from '$lib/services/tmdb/tmdb';
-	import type { FilmDetails } from '$lib/types/Film.types';
 
   const dispatch = createEventDispatcher();
 
@@ -12,21 +10,9 @@
   let open = false;
   let debounceTimer: NodeJS.Timeout;
 
-  // Déclenché quand on clique sur un film
-  function selectFilm(film: FilmDetails) {
-    query = film.title;
-    open = false;
-    dispatch('select', film);
-  }
-
-  function gotoFilm(film: FilmDetails) {
-    goto(`/film/${film.id}`);
-  }
-
   // Recherche TMDb avec debounce
   async function handleInput() {
     clearTimeout(debounceTimer);
-
     debounceTimer = setTimeout(async () => {
       if (query.trim().length < 2) {
         results = [];
