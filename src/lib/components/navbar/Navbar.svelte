@@ -12,7 +12,7 @@
     {#if user}
       <Menu user={user} />
 
-      <span class="opacity-80">{user.username.substring(0, 1)}.</span>
+      <span class="opacity-80">{user.username}</span>
 
       <form method="POST" action="/logout">
         <button

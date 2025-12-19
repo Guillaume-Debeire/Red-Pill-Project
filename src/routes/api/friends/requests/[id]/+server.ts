@@ -5,6 +5,7 @@ export const PATCH: RequestHandler = async ({ params, request, locals }) => {
 	const user = locals.user;
 	if (!user) return new Response('Not authenticated', { status: 401 });
 
+	console.log('params', params);
 	const requestId = Number(params.id);
 	if (isNaN(requestId)) return new Response('Invalid ID', { status: 400 });
 

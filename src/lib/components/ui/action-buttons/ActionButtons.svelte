@@ -82,13 +82,13 @@
   : userFilmEntryClient.film.releaseStatus !== "Released"
     ? "Pas encore sorti"
     : userFilmEntryClient.entryStatus === "VU"
-      ? "Film ajouté"
+      ? "Vu"
       : "Vu";
 
   $: labelToWatch = savingToWatch
   ? "Ajout en cours…"
     : userFilmEntryClient.entryStatus === "A_VOIR"
-      ? "Film ajouté"
+      ? "A voir"
       : "A voir";
 
   $: labelNotInteressed = savingNotInteressed
